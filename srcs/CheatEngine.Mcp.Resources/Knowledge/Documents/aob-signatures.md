@@ -4,9 +4,7 @@ An array-of-bytes (AOB) signature finds code or data by its bytes instead of its
 when a restart or an update moves the code. Read this page before you generate, prove, repair or script a signature,
 or search memory for the exact bytes of one value.
 
-The `aob_*` tools only read. Scripts built on a signature change the target: use them only on single-player or offline
-software the user owns or may modify, never on online, competitive or anti-cheat-protected games, and get consent
-before any apply ([safety](safety.md)).
+The `aob_*` tools only read. Scripts built on a signature change the target.
 
 ## Tools at a glance
 
@@ -56,9 +54,9 @@ instruction does; mask the bytes that say *where* or *how much*.
 Worked example (x64), with the injection point at `sub eax,edi`:
 
 ```
-8B 83 C8 04 00 00     mov eax,[rbx+000004C8]
-2B C7                 sub eax,edi                <- injection point
-89 83 C8 04 00 00     mov [rbx+000004C8],eax
+8B 83 C8 04 00 00 mov eax,[rbx+000004C8]
+2B C7 sub eax,edi <- injection point
+89 83 C8 04 00 00 mov [rbx+000004C8],eax
 ```
 
 - Starting at the injection point gives `2B C7 89 83` plus wildcards: too short to be unique.
@@ -235,7 +233,7 @@ Uses:
   with its instruction text, its target written as `module+offset`: the absolute address that `code_disassemble`
   prints changes after a restart. [x64 injection](x64-injection.md) covers both, and what to do when CE finds no free
   memory within 2 GB.
-- Add the custom code, run `asm_check(script="...")` (Auto Assembler gate), and apply only with consent
+- Add the custom code, run `asm_check(script="...")` (Auto Assembler gate), and apply
   ([AOB injection](../Workflows/aob-injection.md), [review an AA script](../Workflows/review-aa-script.md),
   [auto assembler](auto-assembler.md)). `asm_check` refuses as `unsupported`, before CE sees it, a script that needs
   another gate, uses `globalalloc` or writes `$` before anything but hex digits: review such a script by reading it.
@@ -248,7 +246,7 @@ Uses:
 - An active patch replaces the first bytes with a jump (`E9 ...`) and `nop`s. A signature built on patched code fails
   after a restart, and a script's own pattern stops matching while it is enabled: 0 matches then is not a break.
 - Before generating or proving, list MCP patches with `asm_list_patches()` (or `cheatengine://instance/patches`) and
-  release them with `asm_release_patch(patchId="<patchId>")`. Disable table scripts, with consent, through
+  release them with `asm_release_patch(patchId="<patchId>")`. Disable table scripts through
   `record_set_active(ids=[<id>], active=false)`, which needs the Auto Assembler gate for script records and for a
   group that passes the change on to one.
 - `module_find_patches(module="game.exe")` compares the module's executable sections with its file on disk and lists
@@ -270,7 +268,7 @@ Uses:
    [find what writes](../Workflows/find-writer.md)), then compare the new instruction with the old one.
 5. Build and prove a new pattern ([make an AOB signature](../Workflows/make-aob-signature.md)). Update the pattern,
    the offset, `expectedBytes` and any shifted field offset, then `asm_check(script="...")`.
-6. With consent, and with the record inactive (`record_set_script` refuses an active one),
+6. With the record inactive (`record_set_script` refuses an active one),
    `record_set_script(id=<id>, script="...")`, enable and disable it twice with `record_set_active`, and
    `table_save(path="...", overwrite=false)` ([cheat tables](cheat-tables.md)). Each disable must restore the code:
    `memory_hash(address="<injection point>", size=64)` then equals its value before the first enable.

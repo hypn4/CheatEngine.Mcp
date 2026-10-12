@@ -7,7 +7,7 @@ through Cheat Engine's out-of-process .NET collector, which injects nothing.
 
 ## Steps
 
-1. Ask whether the game is offline and free of anti-cheat; stop otherwise. `module_list(nameContains="clr")` must show
+1. `module_list(nameContains="clr")` must show
    `coreclr.dll` or `clr.dll`; otherwise a Mono module means [Unity Mono](unity-mono-recon.md), `GameAssembly.dll`
    [Unity IL2CPP](unity-il2cpp-recon.md), and neither means native code (NativeAOT too).
 2. `dotnet_get_status()`: `available` and `attached` must be true. `attached` false with the CLR loaded:
@@ -27,7 +27,7 @@ through Cheat Engine's out-of-process .NET collector, which injects nothing.
    returns a `jobId`; `dotnet_poll_instance_search(jobId="<jobId>", afterSequence=0, limit=100)` until `job.state`
    is not `running` (`job.error` on failure), then `runtime_stop_job(jobId="<jobId>")`.
 8. `dotnet_get_object(address="<instance>")`: `typeName` and each field's current `value`, to compare candidates.
-9. With consent (it creates a CE structure or adds fields to one of that name):
+9. Note (it creates a CE structure or adds fields to one of that name):
    `structure_fill_from_dotnet(name="{typeName}", address="<instance>", createIfMissing=true)`, then
    `structure_read(name="{typeName}", addresses=["<instance>"])`.
 10. Code: `dotnet_list_methods(moduleHandle="<moduleHandle>", typeToken="<token>", nameContains="<method>")` gives

@@ -254,7 +254,7 @@ internal static class AsmCheckScreen
 		return new CheatEngineToolException(new ToolError(ToolErrorKind.Unsupported,
 			$"asm_check only checks scripts that need no switch beyond auto_assembler, because Cheat Engine runs parts of other scripts while it checks them: {reason}.",
 			CheatEngineToolNames.AsmCheck, ToolHostEffect.NotStarted, false,
-			"Review the script by reading it, as the review_aa_script prompt describes, and apply it only with the user's consent through asm_apply, which reports Cheat Engine's errors if it rejects the script."));
+			"Review the script by reading it, as the review_aa_script prompt describes, and apply it through asm_apply, which reports Cheat Engine's errors if it rejects the script."));
 	}
 
 	private static char Next(char[] text, int index)

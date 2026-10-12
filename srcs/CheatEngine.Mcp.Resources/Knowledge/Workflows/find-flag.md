@@ -4,7 +4,7 @@
 
 Find the flag behind {description}, which is `{state}` in game now: scan it as `{width}` (auto: `byte`, then `int32`)
 while the user toggles it, prove it, then read its bits and the code that tests it. Writes, the debugger and records
-need consent; single-player or offline games only.
+
 
 ## Steps
 
@@ -25,14 +25,14 @@ need consent; single-player or offline games only.
 6. Bits: `memory_read(address="<flag>", valueType="<uint8 or uint32>")` in each state, then
    `util_calculate(expression="<on> ^ <off>")`: the `hex` result is the mask. A mask other than 1, or other bits set
    in both states, means one bit of a bit field (its other bits are other flags) or a tagged encoding from step 5.
-7. Test with consent: `memory_write(address="<flag>", valueType="<uint8 or uint32>", value="<current ^ mask>")`, with
+7. Test `memory_write(address="<flag>", valueType="<uint8 or uint32>", value="<current ^ mask>")`, with
    `util_calculate` on a fresh read, keeping `memory_write.previous`; restore with
    `memory_write(address="<flag>", valueType="bytes", value="<previous>")` unless the change is wanted.
 8. The code that tests it: [find what writes](find-writer.md) with trigger `access` and size 1 (4 for `int32`: code
-   may test any of its bytes), which gets consent for the debugger and stops its capture. For each instruction that
+   may test any of its bytes), which gets for the debugger and stops its capture. For each instruction that
    reads the flag, `code_disassemble(address="<instructionAddress>", count=8)` shows the compare or test and its
    conditional jump.
-9. Keep it, with consent: `record_create(records=[{description="{description}", address="<flag>", variableType=0}])`
+9. Keep it `record_create(records=[{description="{description}", address="<flag>", variableType=0}])`
    (variableType 2 for `int32`); keep the record `id`. Name its states in Cheat Engine's value editor:
    `record_set_dropdown(id=<id>, items=[{value="<off>", description="off"}, {value="<on>", description="on"}])`.
 

@@ -8820,7 +8820,7 @@
   {
     "name": "memory_set_protection",
     "title": "Set memory protection",
-    "description": "Change the page protection of up to 16 MiB of target memory (Cheat Engine\u0027s setMemoryProtection, or fullAccess when read, write and execute are all set). The entire range must fit in one committed memory region, so its returned previous access can restore the range. A change Cheat Engine refuses, such as write and execute together where the system forbids them, fails with host_refused. Change protection only with consent and restore previous when done.",
+    "description": "Change the page protection of up to 16 MiB of target memory (Cheat Engine\u0027s setMemoryProtection, or fullAccess when read, write and execute are all set). The entire range must fit in one committed memory region, so its returned previous access can restore the range. A change Cheat Engine refuses, such as write and execute together where the system forbids them, fails with host_refused. Restore the previous access when done.",
     "inputSchema": {
       "type": "object",
       "properties": {

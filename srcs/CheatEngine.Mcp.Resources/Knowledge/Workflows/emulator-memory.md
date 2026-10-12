@@ -2,12 +2,12 @@
 
 ## Goal
 
-Find the guest RAM of `{emulator}`, name its base, then find, read and (with consent) change values in the guest's
+Find the guest RAM of `{emulator}`, name its base, then find, read and change values in the guest's
 byte order; `{guestAddress}`, if given, comes from the user's notes. Offline play of owned games only.
 
 ## Steps
 
-1. Stop if netplay or an online mode is on. `process_list(nameContains="{emulator}")`, then
+1. `process_list(nameContains="{emulator}")`, then
    `process_attach(process="<exe>")`.
 2. Find the base; page with memory_list_regions.nextOffset:
    - dolphin: `memory_list_regions(type="mapped", limit=2000)`: a region of 33554432 bytes (MEM1, guest 80000000)
@@ -35,7 +35,7 @@ byte order; `{guestAddress}`, if given, comes from the user's notes. Offline pla
    `scan_first(scannerName="emu", valueType="bytes", value="00 00 00 64", startAddress="emuBase", endAddress="emuBase+1800000", alignment=4, includeMapped=true)`,
    then `scan_next(scannerName="emu", comparison="exact", value="00 00 00 5F")` when it is 95; list with
    scan_list_results.
-8. With consent:
+8.
    `memory_write(address="emuBase+<offset>", valueType="int32", value="999", byteOrder="big_endian", verify=true)`;
    undo by writing memory_write.previous back as valueType bytes.
 9. Keep: `record_create(records=[{description="Coins", address="emuBase+<offset>", variableType=2}])`, without value.

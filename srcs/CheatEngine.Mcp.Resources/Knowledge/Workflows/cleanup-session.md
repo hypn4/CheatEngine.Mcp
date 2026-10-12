@@ -12,7 +12,7 @@ deletes them after asking.
    `debugger_get_status()`, `debugger_list_breakpoints()`, `speedhack_get_state()`, `mono_get_status()`,
    `scan_list_scanners()`, `pointer_list_maps()`, `pointer_list_scans()`, `memory_list_snapshots()`,
    `symbol_list_registered(offset=0, limit=200)`, and `record_get(ids=[...])` for this session's records.
-2. Show the user what will be stopped, restored, released, deleted or kept; get consent.
+2. Show what will be stopped, restored, released, deleted or kept.
 3. `runtime_stop_job(jobId="...")` for each running job; a stop discards its items, so poll first if needed. A main
    scan this session started that still runs: `scan_stop(scannerName="main")`.
 4. Owned breakpoints (`debugger_list_breakpoints.owned`): `debugger_delete_breakpoint(address="...")`. Only then, if
@@ -48,7 +48,7 @@ deletes them after asking.
 - `capability_disabled` (`speedhack_set_speed` needs Mcp:EnableTargetCodeExecution, an active script record
   Mcp:EnableAutoAssembler): `runtime_release_resources()` still restores a speed this session set; for the rest, tell
   the user what to undo in Cheat Engine.
-- `orphaned` true (an earlier plugin activation): only with consent, `runtime_release_resources(includeOrphans=true)`.
+- `orphaned` true (an earlier plugin activation): only `runtime_release_resources(includeOrphans=true)`.
 - A `cleanup_failed` entry (its process is no longer the opened one) needs manual recovery; once the user confirms it
   is undone, end with `runtime_release_resources(acknowledgeIds=["<id>"])`, which also releases the rest. A failed
   patch, allocation, scanner or symbol release shows `requiresManualRecovery` and cannot be acknowledged.
@@ -60,7 +60,7 @@ deletes them after asking.
 - Never touch records, patches, breakpoints, structures or a pause the user made; `debugger_delete_breakpoint` refuses
   the breakpoints MCP does not own.
 - Raw `memory_write` and `memory_set_protection` changes and what Lua or remote calls left are untracked: restore them
-  only from recorded original values, with consent.
+  only from recorded original values.
 - `process_attach` refuses with `busy` while owned resources or orphans remain; never clean up through another
   instance.
 

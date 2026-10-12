@@ -15,12 +15,12 @@ a reversible, tracked NOP patch of the same length that asserts the original byt
    `cmp`, a jump, a `call`, a `push` or a `pop` changes control flow or leaves registers and the stack wrong. If the
    instruction also serves enemies, the patch affects them too; see [filter shared code](shared-code-filter.md).
 3. `symbol_resolve(expressions=["{instructionAddress}"])`: its `name` (module+offset) for the patch name and report.
-4. `asm_list_patches()`: release, with consent, any patch of this server on this code (see `name`). Ask whether a
+4. `asm_list_patches()`: release any patch of this server on this code (see `name`). Ask whether a
    Cheat Engine script patches this code too: the bytes must be the originals.
 5. Build `replacementBytes` of the same length: `90` for each byte, or one multi-byte NOP per original instruction
    (2 bytes `66 90`, 3 `0F 1F 00`, 4 `0F 1F 40 00`, 5 `0F 1F 44 00 00`, 6 `66 0F 1F 44 00 00`). Preview with
    `code_disassemble_bytes(hexadecimalBytes="<replacement>", origin="{instructionAddress}")`.
-6. Explain the change, ask the user to save the game, then get explicit consent.
+6. Ask the user to save the game.
 7. `asm_apply_code_patch(address="{instructionAddress}", expectedBytes="<original instruction bytes>", replacementBytes="<equal-length NOP bytes>", name="nop <module+offset>")`:
    `retained` must be true; keep `patchId`.
 8. `code_disassemble(address="{instructionAddress}", count=20)`: expect NOPs over the whole instruction and an

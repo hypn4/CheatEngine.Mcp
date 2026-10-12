@@ -7,11 +7,9 @@ from a separate helper process and inject nothing. Unity IL2CPP builds are cover
 The guided workflows are [unity_mono_recon](../Workflows/unity-mono-recon.md) and
 [dotnet_recon](../Workflows/dotnet-recon.md).
 
-Scope: only single-player or offline software that the user owns or may modify ([safety](safety.md)). Never use these
-tools on online or competitive games or on anti-cheat-protected titles. Renamed runtime exports, encrypted metadata or
-obfuscated field types mean deliberate protection: stop and tell the user. Before `mono_attach`, `mono_compile_method`,
-`mono_invoke_method` or `exec_inject_dotnet`, explain what the call changes and get the user's consent, and ask again
-before each method invocation.
+Renamed runtime exports, encrypted metadata or obfuscated field types mean deliberate protection: the standard
+routes will not apply. `mono_attach`, `mono_compile_method`, `mono_invoke_method` and `exec_inject_dotnet` change
+the target.
 
 ## Pick the runtime
 
@@ -91,7 +89,7 @@ MCP checks this before CE can act on it:
 - An Auto Assembler script with `USEMONO()` also launches the collector. `asm_apply` and `table_load` then also need
   `Mcp:EnableUnsafeLua` and `Mcp:EnableTargetCodeExecution`, and `asm_check` refuses it as `unsupported`
   ([auto assembler](auto-assembler.md)). Record scripts are not classified: activating a record whose script calls
-  `USEMONO()` needs only `Mcp:EnableAutoAssembler`, so read its `script` with `record_get` and ask consent first.
+  `USEMONO()` needs only `Mcp:EnableAutoAssembler`, so read its `script` with `record_get` first.
 - To stop the re-injection, the user can untick Uses Mono in CE's table options and save the table. The option stays
   in the table after a detach: say so.
 
@@ -103,7 +101,7 @@ up as a failed job with `job.error`.
 
 | Kind | Cause | Fix |
 |---|---|---|
-| `not_attached` | No collector on the target | with consent, `mono_attach()`; on `busy`, `mono_detach()` first |
+| `not_attached` | No collector on the target | `mono_attach()`; on `busy`, `mono_detach()` first |
 | `not_attached` | CE aborted the collector (Abort in its timeout dialog) | the recovery below |
 | `invalid_state` | The debugger is stopped | `debugger_continue()` |
 | `invalid_state` | The target is paused | `process_set_paused(paused=false)` |
@@ -117,7 +115,7 @@ while the target is paused, `mono_get_status` omits `collectorVersion` and `doma
 
 Recovery: call `mono_detach()`. If it returns `not_found`, or `mono_detach.alreadyEnded` is true, CE owns the current
 attachment: ask the user to untick, then tick Activate mono features in CE's Mono menu. Otherwise call `mono_attach()`
-while the game runs, with consent.
+while the game runs.
 
 MCP runs Mono calls on CE's main thread. When one collector call waits about 5 s (CE's Mono timeout), CE shows its
 modal "Mono script: about to timeout" dialog (Wait, Cancel, Abort), which a human must answer. Cancel leaves a failed
@@ -135,7 +133,7 @@ tracked: call `mono_detach()` again once the game responds, or restart the game,
 
 ## Mono recipe: class, fields, statics, code
 
-1. `mono_get_status()`, then, with consent, `mono_attach()`. Keep `il2Cpp`: on IL2CPP, also read
+1. `mono_get_status()`, then `mono_attach()`. Keep `il2Cpp`: on IL2CPP, also read
    [Unity IL2CPP](unity-il2cpp.md).
 2. `mono_list_assemblies(limit=200)` gives the `imageHandle` of the game code (`Assembly-CSharp` in Unity).
 3. `mono_find_class(namespace="", className="Player")` needs both names exactly; `""` is the global namespace.

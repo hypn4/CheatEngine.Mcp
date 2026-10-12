@@ -4,7 +4,7 @@
 
 Find the object that holds `{values}` (each `type:value@hexOffset`) with one byte-pattern search in `{region}` memory
 (`heap`: writable private memory), narrow the hits while the user changes one value, then verify the object and find
-its owners. The searches only read; records need the user's consent.
+its owners. The searches only read.
 
 ## Steps
 
@@ -33,7 +33,7 @@ its owners. The searches only read; records need the user's consent.
    start; on Unity, when `mono_get_status()` reports `attached`, `mono_get_object(address="<base>")` names the class.
    `pointer_find_references(target="<base>", limit=20)` lists its holders (a `symbol` is a static root). Then
    [dissect the structure](dissect-structure.md).
-8. With consent: `record_create(records=[{description="<field>", address="<base>+10", variableType=2}])`, one entry
+8. `record_create(records=[{description="<field>", address="<base>+10", variableType=2}])`, one entry
    per field with its type's code (0 to 3 for 1-, 2-, 4- and 8-byte integers, 4 float, 5 double; text is 6 with
    `length=<characters>`, plus `unicode=true` for `wstring`); with no `value`, nothing is written. Keep the ids.
 

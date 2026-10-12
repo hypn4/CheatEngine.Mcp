@@ -5,10 +5,9 @@ touches, to stop a thread and read its registers, or to trace the path that deci
 attaching and before you finish a task that used the debugger. Prefer a scan ([value scans](value-scans.md)) or plain
 disassembly ([code analysis](code-analysis.md)) when they answer the question: they need no debugger.
 
-Responsible use: attach only to single-player or offline software the user owns or may modify, never to online,
-competitive or anti-cheat-protected titles ([safety](safety.md)). A debugger changes the target's timing, a stopped
-thread freezes it, and a wrong breakpoint or register write can crash it and lose unsaved progress. Explain the effect
-and get consent before the attach, before breakpoints that stop threads or write code bytes, and before register writes.
+A debugger changes the target's timing, a stopped thread freezes it, and a wrong breakpoint or register write can
+crash it and lose unsaved progress. Check the effect before the attach, before breakpoints that stop threads or write
+code bytes, and before register writes.
 
 ## Tools at a glance
 
@@ -248,10 +247,10 @@ let the game run briefly, poll as above, then `runtime_stop_job`.
   reports `unsupported` when CE did not report the process start time that the VEH guard needs.
 - An unconfirmed `debugger_delete_breakpoint` is `partial_effect` (`cleanup_unconfirmed`): check
   `debugger_list_breakpoints()` and, with the user, remove a leftover in CE. The entry stays in
-  `runtime_list_resources()`. Acknowledge it only at the end of cleanup and with consent, because
+  `runtime_list_resources()`. Acknowledge it only at the end of cleanup, because
   `runtime_release_resources(acknowledgeIds=["<resourceId>"])` also releases everything else MCP holds.
 - A plugin disable runs each job's stop hook once. MCP-set breakpoints and jobs whose cleanup failed stay in CE and
-  show as orphans in `runtime_list_resources()` after re-enable; with consent, release them with
+  show as orphans in `runtime_list_resources()` after re-enable; release them with
   `runtime_release_resources(includeOrphans=true)`, which releases everything else too. See
   [errors and recovery](errors-and-recovery.md).
 

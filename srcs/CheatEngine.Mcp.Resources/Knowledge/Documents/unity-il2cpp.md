@@ -6,10 +6,9 @@ a build, to see what Cheat Engine 7.7's Mono data collector still offers on it, 
 offline dump or find a class without one, and to read objects and static fields. The guided workflow is
 [unity_il2cpp_recon](../Workflows/unity-il2cpp-recon.md); Mono builds are in [Mono and .NET](mono-and-dotnet.md).
 
-Scope: single-player or offline games the user owns or may modify ([safety](safety.md)). An encrypted
-`global-metadata.dat`, a `GameAssembly.dll` that is packed or has no `il2cpp_` exports, value-protection field types
-such as `ObscuredInt`, or an anti-cheat mean the game is deliberately protected: stop and tell the user. Never help get
-around that protection.
+An encrypted `global-metadata.dat`, a `GameAssembly.dll` that is packed or has no `il2cpp_` exports, or
+value-protection field types such as `ObscuredInt` mean the game is deliberately protected: the standard offsets and
+dumps will not apply.
 
 ## Recognise the build
 
@@ -31,7 +30,7 @@ around that protection.
 
 Three approaches: **offline with a dump** (the workflow's default) only reads the game's memory, with numbers from the
 user's own dump; **offline without a dump** also only reads memory and finds a class by its name; the **collector**
-injects CE's Mono data collector, needs `Mcp:EnableTargetCodeExecution` and the user's consent, and names classes
+injects CE's Mono data collector, needs `Mcp:EnableTargetCodeExecution` and names classes
 live.
 
 ## The collector in IL2CPP mode
@@ -216,7 +215,7 @@ above. Each step rests on that layout and is UNVERIFIED per build, so check it a
   filter on the instance's class pointer (`[rcx]` for an instance method on x64 Windows).
 - The C++ compiler can inline small getters and setters, so a hook on them may never fire: hook the code that writes
   the field instead.
-- Hooks and patches are Auto Assembler work ([x64 injection](x64-injection.md)): explain the change and get consent.
+- Hooks and patches are Auto Assembler work ([x64 injection](x64-injection.md)): explain the change.
 - `mono_invoke_method` runs game code on the collector's thread, not the game's main thread, and many UnityEngine APIs
   expect the main thread (UNVERIFIED per API): one call per explicit user request, never in a loop.
 - On a Unity game the first `speedhack_set_speed`, speed 1 included, starts the collector and hooks
@@ -236,7 +235,7 @@ above. Each step rests on that layout and is UNVERIFIED per build, so check it a
   `mono_get_object` reports `invalid_state` for the call that hit it, so retry it once; a class, field or method list
   that the failure interrupted can come back short or as `not_found`, so list again. If the reconnect fails
   (`invalid_state`), follow the hint: `mono_detach()`; when it returns `not_found` or `alreadyEnded`, CE owns the
-  attachment, so ask the user to deactivate and re-activate Mono features in CE's Mono menu; otherwise, with consent,
+  attachment, so ask the user to deactivate and re-activate Mono features in CE's Mono menu; otherwise
   `mono_attach()` once. While CE shows its Mono timeout dialog, Mono calls return `invalid_state` until the user
   answers it (Wait, Cancel or Abort).
 - `mono_detach()` closes only the attachment this activation made; if it already ended in CE, the result's

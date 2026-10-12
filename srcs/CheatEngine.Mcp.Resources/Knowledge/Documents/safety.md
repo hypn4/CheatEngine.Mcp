@@ -1,44 +1,15 @@
-# Safety and responsible use
+# Safety
 
 Cheat Engine (CE) can read and change any process the user can open, run code inside it, and load a kernel driver and
-a hypervisor. Read this page before the first change of a session: scope, consent, backups, what the gates do and do
-not stop, what MCP tracks, how to restore, and the kernel rules.
+a hypervisor. Read this page before the first change of a session: backups, what the gates do and do not stop, what
+MCP tracks, how to restore, and the kernel rules.
 
 ## Scope
 
-- **In scope:** software the user owns or may modify, used offline: their own programs, single-player games with no
-  online component, and CE's practice targets `Tutorial-x86_64.exe` and `gtutorial-x86_64.exe`
-  ([ce-tutorial](ce-tutorial.md), [ce_tutorial_walkthrough](../Workflows/ce-tutorial-walkthrough.md)).
-- **Online parts count as online:** global leaderboards, synced achievements, trading or a cloud economy make a game
-  online unless the user confirms a fully offline mode.
-- **Out of scope, always:** multiplayer or co-op with other people, ranked play, leaderboards, shared economies,
-  anything that gives an advantage over other players, anti-cheat-protected games, DRM, licence or purchase checks,
-  and other people's data. Answer "not with this tool" and do not explain how a protection works.
-- **CE's terms:** cheatengine.org says CE is for private and educational use by adults (18 or older) and asks users to
-  check the target's EULA or terms of service before attaching. That is a website notice, not an in-app prompt; CE's
-  `license.txt` allows personal use and testing. Remind the user for commercial software; the decision and the
-  responsibility are theirs.
-- **Consequences to name** for a borderline target: a terms-of-service breach, suspension or a permanent ban
-  (sometimes tied to the hardware), lost purchases, and legal exposure (publishers have won civil cases against cheat
-  makers, and some countries, South Korea among them, criminalise game cheats).
 - Attach only to the process the user named; ask when the name is ambiguous. Never inspect unrelated processes such as
   browsers, password managers or chat clients, and never repeat a secret that a read surfaces.
 
-## Anti-cheat and bans
-
-- Before the first attach to a game, ask whether it has online features or anti-cheat. If it does, stop, unless the
-  user confirms an offline build without anti-cheat.
-- Never attach to a protected game, not even "just to look": it can get the account banned permanently.
-- Do not discuss how anti-cheat or DRM detects tools, or how to avoid it. The CE table community at FearLess also
-  forbids multiplayer cheat requests.
-
-## Consent for each change
-
-Consent covers one change, not the session. Before each write (memory, register or physical), protection change,
-pause, Auto Assembler script, patch or script-record activation, `lua_execute`, code execution or injection
-(`exec_call_remote`, `mono_invoke_method` and the like), `mono_attach`, `debugger_attach`, `speedhack_set_speed`,
-`process_create`, `table_load`, file write or kernel call: say what will change, what could break and how to undo it,
-then wait for a yes. Ask again when the target or the risk level changes, for example from user mode to the kernel.
+## What a change can do
 
 - Look before you change: resolve, read and scan first, and write only addresses you identified.
 - `may_prompt` tools (`_meta` `cheatengine/dispatchClass`) can open a CE dialog that waits for a person: `asm_apply`,
@@ -115,7 +86,7 @@ What the switches do not do:
 - **Address expressions can run Lua.** CE's symbol handler runs a `$` token such as `$player` as Lua, and CE 7.7's
   `autorun/luasymbols.lua` reads any name it cannot resolve as a Lua expression. This happens in every tool that takes
   an address, read-only ones included, whatever `Mcp:EnableUnsafeLua` says; MCP does not screen expressions (only
-  `asm_check` refuses a `$` Lua token). Keep Lua out of addresses and run Lua only through `lua_execute`, with consent
+  `asm_check` refuses a `$` Lua token). Keep Lua out of addresses and run Lua only through `lua_execute`
   ([address expressions](address-expressions.md)).
 - **Much happens outside MCP:** hotkeys, the user's clicks, autorun Lua, table scripts, and CE settings that route
   memory access through the kernel driver (see "CE settings that reach the kernel").
@@ -163,7 +134,7 @@ set, CE injects the Mono collector again when a process opens or a table loads.
 
 - Undo what the session created, newest first, with [cleanup_session](../Workflows/cleanup-session.md): stop jobs;
   delete MCP's breakpoints, then continue a stopped debugger; deactivate records; release patches; resume MCP's pause,
-  then set speed 1; with consent, delete the records and structures you made; delete scanners, pointer scans, pointer
+  then set speed 1; delete the records and structures you made; delete scanners, pointer scans, pointer
   maps and snapshots; after the patches, unregister symbols and free allocations; `mono_detach()`;
   `runtime_release_resources()`; `debugger_detach()` last (it refuses while any tracked resource remains, and
   unpauses the target). Confirm with `runtime_list_resources()` and `runtime_get_overview()`.
@@ -188,7 +159,7 @@ system, and the CE wiki puts the blue-screen risk of starting DBVM at about one 
 hyper-threads. Details: [kernel](kernel.md).
 
 - **Before:** call `kernel_get_status` (it loads nothing). Use kernel tools only on a machine the user can afford to
-  crash, with all work saved, and get consent for each call.
+  crash, with all work saved.
 - **Unavailable is normal.** Since the Windows 11 2022 update, Microsoft's vulnerable driver blocklist is on by default
   and denies CE's driver (`dbk32.sys`, `dbk64.sys`). Memory integrity, on by default on clean Windows 11 installs on
   compatible hardware, runs Windows under Microsoft's hypervisor, which leaves no room for DBVM. An `unsupported` or
@@ -239,8 +210,6 @@ CE (a DBK already loaded stays until a reboot or the unloader), and prefer `debu
 
 ## Sources
 
-- CE terms: https://www.cheatengine.org/ and `license.txt` in the CE 7.7 install; FearLess:
-  https://fearlessrevolution.com/viewtopic.php?t=5718
 - DBVM risks: https://wiki.cheatengine.org/index.php?title=DBVM
 - CE source (https://github.com/cheat-engine/cheat-engine): `formsettingsunit.pas` and `MainUnit2.pas` (Extra options,
   debugger method, Make possible, Restore Protection, settings applied at start), `NewKernelHandler.pas` and

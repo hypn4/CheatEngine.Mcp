@@ -59,7 +59,7 @@
   {
     "name": "call_game_function",
     "title": "Call a game function once",
-    "description": "Run one game function once, such as one that adds gold: find its arguments at a call site, pass numbers or a buffer, call it with consent and verify the effect. Needs Mcp:EnableTargetCodeExecution for its gated steps.",
+    "description": "Run one game function once, such as one that adds gold: find its arguments at a call site, pass numbers or a buffer, call it once and verify the effect. Needs Mcp:EnableTargetCodeExecution for its gated steps.",
     "arguments": [
       {
         "name": "functionAddress",
@@ -361,7 +361,7 @@
   {
     "name": "find_position",
     "title": "Find coordinates and teleport",
-    "description": "Coordinates to save, restore or teleport in a single-player game: unknown scans while the user moves along one axis, then the neighbouring axes and a verified write.",
+    "description": "Coordinates to save, restore or teleport in a game: unknown scans while the user moves along one axis, then the neighbouring axes and a verified write.",
     "arguments": [
       {
         "name": "valueType",
@@ -386,7 +386,7 @@
   {
     "name": "find_text",
     "title": "Find and edit text in memory",
-    "description": "Text in memory such as a player name or a dialogue buffer: UTF-8 and UTF-16 byte searches, its container and owner, and an in-place edit with consent.",
+    "description": "Text in memory such as a player name or a dialogue buffer: UTF-8 and UTF-16 byte searches, its container and owner, and an in-place edit.",
     "arguments": [
       {
         "name": "text",
@@ -784,7 +784,7 @@
   {
     "name": "unity_il2cpp_recon",
     "title": "Explore a Unity (IL2CPP) game",
-    "description": "Unity IL2CPP classes and fields: offline from offsets the user supplies, or through CE\u0027s data collector after explicit consent. Needs Mcp:EnableTargetCodeExecution for its gated steps.",
+    "description": "Unity IL2CPP classes and fields: offline from offsets the user supplies, or through CE\u0027s data collector. Needs Mcp:EnableTargetCodeExecution for its gated steps.",
     "arguments": [
       {
         "name": "mode",
@@ -809,7 +809,7 @@
   {
     "name": "unity_mono_recon",
     "title": "Explore a Unity (Mono) game",
-    "description": "Unity Mono classes, fields, statics and methods through CE\u0027s Mono data collector, after explicit consent. Needs Mcp:EnableTargetCodeExecution for its gated steps.",
+    "description": "Unity Mono classes, fields, statics and methods through CE\u0027s Mono data collector. Needs Mcp:EnableTargetCodeExecution for its gated steps.",
     "arguments": [
       {
         "name": "className",
@@ -847,7 +847,7 @@
   {
     "name": "use_cheat_table",
     "title": "Load and use a cheat table",
-    "description": "Load a table the user trusts, review its scripts, activate one cheat at a time with consent, verify it in game and undo it. Needs Mcp:EnableAutoAssembler for its gated steps.",
+    "description": "Load a table the user trusts, review its scripts, activate one cheat at a time, verify it in game and undo it. Needs Mcp:EnableAutoAssembler for its gated steps.",
     "arguments": [
       {
         "name": "tablePath",

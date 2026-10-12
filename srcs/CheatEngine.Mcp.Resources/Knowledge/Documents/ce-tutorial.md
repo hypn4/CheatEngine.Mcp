@@ -8,10 +8,7 @@ that ship with CE 7.7, and ends with a smoke test for a new setup. The
 
 ## Before you start
 
-- **Scope.** The tutorials are Cheat Engine's own practice programs, made to be modified, so they are always a fair
-  target. Still explain each write, freeze, patch and debugger attach and get the user's consent, as on any target.
-  The techniques carry over only to single-player or offline software the user owns or may modify, never to online,
-  competitive or anti-cheat-protected games (see [safety](safety.md)).
+- **Scope.** The tutorials are Cheat Engine's own practice programs, made to be modified.
 - **Start.** Ask the user to open *Help > Cheat Engine Tutorial (x86_64)*, which starts `Tutorial-x86_64.exe`, or
   *Help > Cheat Engine Tutorial Games*, which starts `gtutorial-x86_64.exe` from 64-bit CE, or to run the file from
   the CE install folder. The folder also holds 32-bit builds: `gtutorial-i386.exe`, and `Tutorial-i386.cepack`, a
@@ -36,7 +33,7 @@ that ship with CE 7.7, and ends with a smoke test for a new setup. The
   quotes: `"\"Tutorial-x86_64.exe\"+346C70"`. The `symbol` that `pointer_find_references` returns is not quoted
   (`Tutorial-x86_64.exe+346C70`), while the `expression` that `pointer_list_paths` returns is: add the quotes before
   you reuse a `symbol`. See [address expressions](address-expressions.md).
-- **Debugger from step 5.** With consent, `debugger_attach(interface="windows")` once per tutorial run, check
+- **Debugger from step 5.** `debugger_attach(interface="windows")` once per tutorial run, check
   `activeInterface`, and keep it attached across steps. A process that used the VEH debugger (which also needs
   `Mcp:EnableTargetCodeExecution`) must restart before another attach. `debugger_detach()` fails with `busy` while
   any resource that `runtime_list_resources()` lists remains, such as a running capture, a patch, a named scanner or
@@ -62,7 +59,7 @@ The win checks come from the tutorial's source; the Next button enables when the
 
 - **Step 2.** `scan_first(valueType="int32", comparison="exact", value="100")`, then poll `scan_get_status()` until
   `resultsReady` is true. After each "Hit me", `scan_next(comparison="exact", value="<new value>")`, poll again, then
-  `scan_list_results()`. With consent, `memory_write(address="<address>", valueType="int32", value="1000")`. The main
+  `scan_list_results()`. `memory_write(address="<address>", valueType="int32", value="1000")`. The main
   scanner uses CE's own scan settings, which `scan_get_status.settings` reports read-only; if nothing is found, see
   [troubleshooting scans](troubleshooting-scans.md).
 - **Step 3.** `scan_reset()` (main refuses a first scan while an earlier scan exists), then
@@ -79,15 +76,14 @@ The win checks come from the tutorial's source; the Next button enables when the
   checks every address unless given an alignment:
   `scan_first(scannerName="tut4", valueType="double", comparison="exact", value="100")`, then
   `scan_next(scannerName="tut4", comparison="exact", value="<new value>")`, and `scan_delete(scannerName="tut4")`
-  when done (a named scan blocks CE while it runs, and its session blocks a target change). With consent,
-  `memory_write(address="<health address>", valueType="float", value="5000")` and
+  when done (a named scan blocks CE while it runs, and its session blocks a target change). `memory_write(address="<health address>", valueType="float", value="5000")` and
   `memory_write(address="<ammo address>", valueType="double", value="5000")`. See [value types](value-types.md).
 - **Step 5.** Find the value (it starts at 100), attach the debugger, then
   `debugger_start_capture(address="<value address>", trigger="write", size=4)` and have the user click "Change value".
   `debugger_poll_capture(jobId="<jobId>", afterSequence=0)`: a data trap reports `ip` after the write, and
   `instructionAddress` is the candidate writer (`isHeuristic` true means it was inferred). Then
   `runtime_stop_job(jobId="<jobId>")` and confirm with
-  `code_disassemble(address="<writer address>", before=2, count=4)`. With consent:
+  `code_disassemble(address="<writer address>", before=2, count=4)`.
   `asm_apply_code_patch(address="<writer address>", expectedBytes="89 10", replacementBytes="90 90", name="tutorial step 5")`.
   Keep `patchId`; release it with `asm_release_patch(patchId="<patchId>")` once the step has passed. A freeze is no
   reliable fix: the tutorial compares the value right after its own write, and only a lucky fast freeze passes.
@@ -108,8 +104,7 @@ The win checks come from the tutorial's source; the Next button enables when the
   `asm_generate_injection(module="Tutorial-x86_64.exe", signature="<pattern>", expectedBytes="83 AE E8 07 00 00 01", symbolName="step7hook", offset=<offset>)`.
   Replace the `db` line under `code:` with `add dword ptr [rsi+7E8],2`, then `asm_check(script="<edited script>")`
   must return `accepted` true. It refuses, as `unsupported`, scripts with Lua, C, `globalalloc` or other constructs
-  beyond the Auto Assembler gate; this one has none. Consent, then
-  `asm_apply(script="<edited script>", name="tutorial step 7")`; keep `patchId`. See [x64 injection](x64-injection.md).
+  beyond the Auto Assembler gate; this one has none. `asm_apply(script="<edited script>", name="tutorial step 7")`; keep `patchId`. See [x64 injection](x64-injection.md).
 - **Step 8.** Scanner route: `pointer_create_map(mapName="tut8")`, poll `pointer_list_maps()` until the map is ready,
   `pointer_find_paths(scanName="tut8", mapName="tut8", target="<value address>", maxDepth=4, staticRootsOnly=true)`,
   poll `pointer_list_scans()`, then `pointer_list_paths(scanName="tut8", sortBy="depth")`. Let the user click "Change
@@ -133,7 +128,7 @@ The win checks come from the tutorial's source; the Next button enables when the
   finds the team at `+14` (1 for your team, 2 for the enemies); health at `+8` also separates the teams until hits
   make the values inside a team differ. Get the signature as in step 7 and hook exactly the 5-byte `movss`:
   `asm_generate_injection(module="Tutorial-x86_64.exe", signature="<pattern>", expectedBytes="F3 0F 11 43 08", symbolName="step9hook", offset=<offset>)`.
-  Edit it with the body below, check it, apply it with consent, and have the user press "Restart game and autoplay",
+  Edit it with the body below, check it, apply it and have the user press "Restart game and autoplay",
   which creates new player objects. The step text asks you to win without freezing your health (the code does not
   check it). Next on this step closes `Tutorial-x86_64.exe` and starts `gtutorial-x86_64.exe`, so release this run's
   patches and jobs first. See [structures](structures.md).
@@ -143,14 +138,14 @@ other labels); `code:` keeps the original `movss` bytes:
 
 ```
 newmem:
-  cmp dword ptr [rbx+14],1   // team 1: your players
+  cmp dword ptr [rbx+14],1 // team 1: your players
   jne enemy
-  movss xmm0,[rbx+08]        // keep the current health
-  jmp return                 // and skip the write
+  movss xmm0,[rbx+08] // keep the current health
+  jmp return // and skip the write
 enemy:
-  xorps xmm0,xmm0            // enemies: health 0
+  xorps xmm0,xmm0 // enemies: health 0
 code:
-  db F3 0F 11 43 08          // movss [rbx+08],xmm0
+  db F3 0F 11 43 08 // movss [rbx+08],xmm0
   jmp return
 ```
 

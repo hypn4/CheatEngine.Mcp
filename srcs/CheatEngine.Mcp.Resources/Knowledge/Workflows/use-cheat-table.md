@@ -3,8 +3,8 @@
 ## Goal
 
 Load the cheat table at `{tablePath}` (the user picks one when it is not given), review its scripts, then activate
-`{cheat}` (or the cheat the user picks) one at a time with consent, verify it in game and leave an undo. Only tables
-from a source the user trusts, for single-player or offline games without anti-cheat.
+`{cheat}` (or the cheat the user picks) one at a time verify it in game and leave an undo. Only tables
+from a source the user trusts.
 
 ## Steps
 
@@ -16,7 +16,7 @@ from a source the user trusts, for single-player or offline games without anti-c
    `table_save(path="<new .CT under a table root>", overwrite=false)` so nothing is lost.
 4. Explain the switches the load may need: Mcp:EnableUnsafeLua for Lua or forms, Mcp:EnableAutoAssembler for
    scripts, Mcp:EnableTargetCodeExecution for `UsesMono`, all three for a `.CETRAINER` or protected table. With
-   consent, `table_load(path="<{tablePath} or the chosen path>", merge=true)`; `merge=false` only when the user wants
+   `table_load(path="<{tablePath} or the chosen path>", merge=true)`; `merge=false` only when the user wants
    the list replaced (a `.CETRAINER` always replaces it). It may wait on a Cheat Engine dialog: tell the user.
 5. Read `inspection`: `requires`, `containsLua` and `assemblerScriptCount`. When `monoAutoAttach` is true, Cheat
    Engine starts its Mono data collector in the game: tell the user.
@@ -25,7 +25,7 @@ from a source the user trusts, for single-player or offline games without anti-c
 7. `record_get(ids=[<id>])`. A script (`variableType` 11): `asm_check(script="<script>")` must be `accepted`; read
    it with the user, or run [review an Auto Assembler script](review-aa-script.md). A value record: `currentAddress`
    and `value` must look right.
-8. With consent, one cheat at a time: `record_set_active(ids=[<id>], active=true)`. Expect `active` true; `pending`
+8. one cheat at a time: `record_set_active(ids=[<id>], active=true)`. Expect `active` true; `pending`
    means read `record_get(ids=[<id>])` again; `failure` gives Cheat Engine's reason.
 9. The user checks the effect in game. To stop it: `record_set_active(ids=[<id>], active=false)`.
 

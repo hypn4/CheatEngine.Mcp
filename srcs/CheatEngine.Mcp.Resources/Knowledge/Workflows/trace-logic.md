@@ -3,7 +3,7 @@
 ## Goal
 
 Answer `{question}` (if not given: what decides the outcome) by reading, then tracing, the code from `{address}` to
-the comparison and conditional jump that decide it. Never on online or anti-cheat-protected games.
+the comparison and conditional jump that decide it. 
 
 ## Steps
 
@@ -11,10 +11,10 @@ the comparison and conditional jump that decide it. Never on online or anti-chea
    `code_get_function_graph(address="<startAddress>")`: `conditional` blocks are the candidate decisions,
    `calls` names the callees. Simple logic needs no debugger.
 2. `debugger_get_status()`; if `broken`, `debugger_continue()`: a trace starts only while the target runs. Not
-   attached: explain that a stopped thread freezes the game, get consent, then `debugger_attach(interface="windows")`.
+   attached: a stopped thread freezes the game; `debugger_attach(interface="windows")`.
 3. `runtime_list_jobs()` and `debugger_list_breakpoints()`: one trace runs at a time, and its entry takes one of the
    four hardware slots by default. Stop your finished jobs; ask before touching the user's breakpoints.
-4. With consent, start it and keep `jobId`. It runs `maximumSteps` contexts (default 32, at most 256, the entry
+4. start it and keep `jobId`. It runs `maximumSteps` contexts (default 32, at most 256, the entry
    included), or ends after the first one matching `stopCondition`: pass `IP=` and the hex address of an instruction
    every path reaches after the decision, such as a `ret`:
    `debugger_start_trace(address="{address}", mode="over", maximumSteps=128, stopCondition="IP=<hex>")`.
@@ -28,7 +28,7 @@ the comparison and conditional jump that decide it. Never on online or anti-chea
    `debugger_continue()` while `broken`. Trace again for the other outcome: the first step where the two paths
    differ is the branch.
 9. Explain the logic and propose a change: force or invert the jump ([patch a branch](patch-branch.md)), a
-   [NOP patch](nop-patch.md) or an [AOB injection](aob-injection.md). Only with consent:
+   [NOP patch](nop-patch.md) or an [AOB injection](aob-injection.md). Only:
    `asm_apply_code_patch(address=..., expectedBytes=..., replacementBytes=...)`; keep `patchId`.
 
 ## Decisions

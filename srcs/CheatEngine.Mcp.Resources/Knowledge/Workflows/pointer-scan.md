@@ -3,14 +3,13 @@
 ## Goal
 
 Find pointer paths from a module to the value at `{address}` that survive restarts, with at most `{maxDepth}` levels
-(default 5) and offsets up to `{maxOffset}` (default 4096, at most 1048576). Single-player or offline software the
-user may modify only.
+(default 5) and offsets up to `{maxOffset}` (default 4096, at most 1048576). 
 
 ## Steps
 
 1. `memory_read(address="{address}", valueType="<type>")`: the user confirms the value.
    `memory_get_address_info(addresses=["{address}"])`: an address with a `module` is already static; stop.
-2. Optional, with consent: `process_set_paused(paused=true)`, so the map is one consistent snapshot (a tracked
+2. Optional `process_set_paused(paused=true)`, so the map is one consistent snapshot (a tracked
    resource until step 3 resumes).
 3. `pointer_create_map(mapName="run1", maxBytes=536870912, maxPointers=4194304, lifetimeSeconds=300)` starts a job
    (the defaults stop at 64 MiB). Poll `pointer_list_maps()` until its `state` is ready; note `incomplete`. Then
@@ -32,7 +31,7 @@ user may modify only.
     fewer levels and small offsets.
 12. Check the best three: `pointer_read_chain(base="<module>+<moduleOffset>", offsets=[...], valueType="<type>")`;
     `address` must be the value's current address.
-13. With consent:
+13.
     `record_create(records=[{description="...", address="<module>+<moduleOffset>", variableType=2, offsets=["<first>", "<second>"]}])`:
     the path's `offsets` as listed; `variableType` 2 int32, 4 float, 5 double; no `value`, so nothing is written.
     Keep the `id`; `currentAddress` must be the value's address.

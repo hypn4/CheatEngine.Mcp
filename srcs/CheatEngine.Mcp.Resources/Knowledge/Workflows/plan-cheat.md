@@ -4,24 +4,22 @@
 
 Turn the goal `{goal}`, in the user's words {description}, into a plan the user approves: the data or code route, the
 workflows to run in order, how to verify the result and the robust form to keep. Planning changes nothing; each
-workflow it starts asks consent for its own changes.
+workflow it starts asks for its own changes.
 
 ## Steps
 
-1. Scope: the game must be single-player or offline and free of anti-cheat, and the value must live on this machine,
-   not on a server (online currencies, ranked stats). Otherwise stop ([safety](../Documents/safety.md)).
-2. `runtime_get_overview()`: `process.isOpen` false means no target: run [attach and orient](attach-and-orient.md).
+1. `runtime_get_overview()`: `process.isOpen` false means no target: run [attach and orient](attach-and-orient.md).
    `runtime_get_overview.runtime.gates` shows which Mcp:Enable… switches are on: plan with those. A non-zero
    `resourceCount` or `jobCount` means earlier work remains: `runtime_list_resources()` shows it.
-3. Engine unknown: [identify the engine](engine-triage.md); it predicts the value type (UE5 positions and GameMaker
+2. Engine unknown: [identify the engine](engine-triage.md); it predicts the value type (UE5 positions and GameMaker
    numbers are doubles). Unity or .NET: naming the field is often the fastest, most robust route:
    [Unity Mono](unity-mono-recon.md), [Unity IL2CPP](unity-il2cpp-recon.md) or [.NET](dotnet-recon.md) recon. On Unity,
    once the collector is attached, `mono_get_object(address="<scan hit>")` names the object and field holding a hit.
-4. Read the section for `{goal}` below and present the plan: the data route first when it fits (no gate, easy to
+3. Read the section for `{goal}` below and present the plan: the data route first when it fits (no gate, easy to
    undo), the code route when a freeze loses or the game recomputes the value. For each workflow say what it changes,
    the gate it needs and how it is undone; suggest a save backup; let the user choose.
-5. Run the chosen workflows in order. Keep every id they return: record ids, `patchId`, `jobId`, scanner names.
-6. Verify as the section says, then make it survive a restart: [build a robust table](build-robust-table.md).
+4. Run the chosen workflows in order. Keep every id they return: record ids, `patchId`, `jobId`, scanner names.
+5. Verify as the section says, then make it survive a restart: [build a robust table](build-robust-table.md).
 
 ## Decisions
 
@@ -32,7 +30,7 @@ workflow it starts asks consent for its own changes.
 - `capability_disabled`: report the setting its `hint` names; never replace a patch with a raw write or Lua.
 - A freeze rewrites the value about every 100 ms (Cheat Engine's default), so one large hit can still kill: take the
   code route then.
-- No scan result: recheck the type (step 3) or switch route. Other failures: [explain the error](explain-error.md).
+- No scan result: recheck the type (step 2) or switch route. Other failures: [explain the error](explain-error.md).
 
 ### goal: infinite_health
 
@@ -61,8 +59,7 @@ workflow it starts asks consent for its own changes.
 
 - Storage: usually int32, sometimes int64; a double in GameMaker; a double or a tagged integer (2n, 2n+1) in
   JavaScript and RPG Maker games; sometimes scaled (cents).
-- Data route: [find a known value](find-known-value.md), earning or spending between scans, then one write with
-  consent, `memory_write(address="<address>", valueType="int32", value="50000")`; keep `memory_write.previous` to undo
+- Data route: [find a known value](find-known-value.md), earning or spending between scans, then one write: `memory_write(address="<address>", valueType="int32", value="50000")`; keep `memory_write.previous` to undo
   it.
 - Code route for free purchases: [find what writes](find-writer.md) while buying, then [a NOP patch](nop-patch.md) on
   the subtraction.
@@ -95,7 +92,7 @@ workflow it starts asks consent for its own changes.
 
 - Storage: three consecutive floats (doubles in Unreal Engine 5); the up axis differs by engine.
 - Route: [find coordinates](find-position.md). Save with `memory_read(address="<x>", valueType="float", count=3)`
-  (`double` in UE5). Load with consent: `process_set_paused(paused=true)`, one
+  (`double` in UE5). Load `process_set_paused(paused=true)`, one
   `memory_write_batch(items=[{address="<x>", valueType="float", value="<x0>"}, ...])` with an item per axis
   (`<x>+4`, `<x>+8`; +8 and +16 for doubles), then `process_set_paused(paused=false)`: MCP's pause is a tracked
   resource that blocks a target switch, so always resume.
@@ -145,7 +142,6 @@ workflow it starts asks consent for its own changes.
 
 ## Pitfalls
 
-- Co-op, ranked or leaderboard play, DRM and licence checks are out of scope too, whatever the goal.
 - A HUD copy, a profile copy or the client copy of a server value snaps back: keep the address the game logic writes.
 - An MCP patch stays until `asm_release_patch` or `runtime_release_resources`, blocks target switching and is not
   saved in a table: build the robust form.

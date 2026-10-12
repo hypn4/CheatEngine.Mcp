@@ -20,7 +20,7 @@ When a workflow will call instance-scoped tools, its preamble directs the client
 Each prompt is backed by one `WorkflowDefinition` and one Markdown body from `Resources/Knowledge/Workflows/`.
 The renderer produces a user message containing the following material:
 
-- A host-neutral preamble covering target selection, authorization, consent, and documentation links.
+- A host-neutral preamble covering target selection, instance routing, and documentation links.
 - Any required capability settings for tools used by the workflow.
 - Validated inputs in their canonical display form, including relevant value notes.
 - The selected workflow body, including any argument-specific excerpt.

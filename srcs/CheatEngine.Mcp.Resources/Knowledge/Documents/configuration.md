@@ -128,14 +128,14 @@ Details that decide a refusal:
 
 The `Mcp:Execution` section is absent from the shipped file; add it to the user file to change a limit.
 
-| Key                          | Default | Range                             |
+| Key | Default | Range |
 |------------------------------|--------:|-----------------------------------|
-| `DispatchBudgetMilliseconds` |     100 | 1-10000                           |
-| `MaxConcurrentDispatches`    |       4 | 1-64                              |
-| `MaxJobs`                    |      16 | 1-64                              |
-| `JobDefaultTtlSeconds`       |     120 | 1-300, at most `JobMaxTtlSeconds` |
-| `JobMaxTtlSeconds`           |     300 | 1-300                             |
-| `JobBufferLimit`             |    4096 | 1-65536                           |
+| `DispatchBudgetMilliseconds` | 100 | 1-10000 |
+| `MaxConcurrentDispatches` | 4 | 1-64 |
+| `MaxJobs` | 16 | 1-64 |
+| `JobDefaultTtlSeconds` | 120 | 1-300, at most `JobMaxTtlSeconds` |
+| `JobMaxTtlSeconds` | 300 | 1-300 |
+| `JobBufferLimit` | 4096 | 1-65536 |
 
 - `DispatchBudgetMilliseconds`: how long one dispatch should hold CE's main thread. A longer one is logged (event 3001),
   never interrupted. `code_find_references`, `code_find_strings` and `lua_find_api` check it and stop with `timeout`
@@ -201,13 +201,13 @@ are not in the shipped file; leave them at their defaults, since a lower value m
 
 ## Environment variables
 
-| Variable                           | Read by            | Sets                                                  |
+| Variable | Read by | Sets |
 |------------------------------------|--------------------|-------------------------------------------------------|
-| `MCP_DATA_DIRECTORY`               | plugin             | the folder of the user settings file and the logs     |
-| `MCP_HOST`, `MCP_PORT`             | plugin             | `Mcp:Host`, `Mcp:Port`                                |
-| `MCP_INSTANCE_NAME`                | plugin             | `Mcp:InstanceName`                                    |
-| `MCP_INSTANCE_DIRECTORY`           | plugin and gateway | `Mcp:InstanceDirectory`, and the gateway's registry   |
-| `MCP_GATEWAY_CALL_TIMEOUT_SECONDS` | gateway            | the call timeout                                      |
+| `MCP_DATA_DIRECTORY` | plugin | the folder of the user settings file and the logs |
+| `MCP_HOST`, `MCP_PORT` | plugin | `Mcp:Host`, `Mcp:Port` |
+| `MCP_INSTANCE_NAME` | plugin | `Mcp:InstanceName` |
+| `MCP_INSTANCE_DIRECTORY` | plugin and gateway | `Mcp:InstanceDirectory`, and the gateway's registry |
+| `MCP_GATEWAY_CALL_TIMEOUT_SECONDS` | gateway | the call timeout |
 
 - `MCP_DATA_DIRECTORY` must be absolute; a relative value fails the enable.
 - The plugin applies a variable whenever it is set, even when blank, and a blank value fails the enable; the gateway
@@ -285,13 +285,10 @@ changes them, and the switches above do not override them.
 - CE's setting for a table's Lua script asks the user by default before it runs an unsigned table's Lua (a
   `.CETRAINER`'s Lua always runs), so `table_load` can wait on a dialog. See [cheat tables](cheat-tables.md).
 
-## Responsible use
+## Operator decisions
 
 - Settings are the user's decision. Explain what a change allows and let the user make it; never ask to widen a root
   or turn a gate back on to get around a refusal.
-- With every gate on, the tools act with CE's full rights. Use them only on single-player or offline software the user
-  owns or may modify, never on online, competitive or anti-cheat-protected games, and get consent before each change.
-  See [safety](safety.md) and [errors and recovery](errors-and-recovery.md).
 
 ## Sources
 

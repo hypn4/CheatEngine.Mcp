@@ -7,8 +7,7 @@ cave, a byte patch or a branch patch. [Auto Assembler](auto-assembler.md) covers
 40 bytes. The size in `alloc` is the exception: it is decimal unless written with `$`, so `alloc(newmem,$1000)` is
 4096 bytes.
 
-Patch only single-player or offline software that the user owns or may modify. Explain each change and get consent
-before you apply it; see [safety](safety.md). `asm_check`, `asm_apply` and `asm_apply_code_patch` need
+`asm_check`, `asm_apply` and `asm_apply_code_patch` need
 `Mcp:EnableAutoAssembler`; `runtime_get_info()` reports the switches in `gates`.
 
 ## Registers
@@ -72,8 +71,8 @@ call may destroy:
    ```
    push rbp
    mov rbp,rsp
-   and rsp,-10       // clear the low four bits
-   sub rsp,20        // shadow space; add 8 per argument beyond four, rounded up to 10
+   and rsp,-10 // clear the low four bits
+   sub rsp,20 // shadow space; add 8 per argument beyond four, rounded up to 10
    call <function>
    mov rsp,rbp
    pop rbp
@@ -92,7 +91,7 @@ thread affinity).
 ## Calling a game function once
 
 `exec_call_remote` calls a target function once, without a hook, and `exec_call_method` an instance method. Both need
-`Mcp:EnableTargetCodeExecution` and run game code that MCP cannot undo: get consent for each call, never loop. For
+`Mcp:EnableTargetCodeExecution` and run game code that MCP cannot undo; never loop. For
 Unity (Mono) use `mono_invoke_method` ([Unity and .NET](mono-and-dotnet.md)).
 
 1. Find the signature at a call site. After a dissect pass ([code analysis](code-analysis.md)),
@@ -190,7 +189,7 @@ Replacements of the same length:
    bytes without checking the rel8 reach, so preview them too;
    `asm_assemble(address="<jcc address>+1", instructions=["jmp <target>"], preference=2)` gives the 5-byte `E9` that
    follows the `90` of a near one.
-3. With consent:
+3.
    `asm_apply_code_patch(address="game.exe+1A2B3C", expectedBytes="7E 1A", replacementBytes="EB 1A", name="always take jle")`.
    Undo it with `asm_release_patch(patchId=...)`.
 
@@ -290,7 +289,7 @@ an executable `memory_allocate` block.
   suffixes the label names, so two hooks can share one script.
 - Your code is entered as the function (on x64, arguments in `RCX`, `RDX`, `R8`, `R9`). Keep the nonvolatile registers
   and `ret`, or jump to `originalcall`; to run the original first, `call [<slot>]` as a normal call (see above).
-- Check for branches into the overwritten run (step 2 of the previous section), then `asm_check` and, with consent,
+- Check for branches into the overwritten run (step 2 of the previous section), then `asm_check` and
   `asm_apply`. The generated x64 comment `//special jump trampoline in the current region (64-bit)` makes `asm_apply`
   also require `Mcp:EnableUnsafeLua` and `Mcp:EnableTargetCodeExecution`: delete it when they are off.
 

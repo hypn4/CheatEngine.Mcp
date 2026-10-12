@@ -4,7 +4,7 @@
 
 From the entity at `{entityAddress}`, find the array or list that holds every entity of its kind, its count (the game
 shows `{expectedCount}`, when given) and a static path to it, on the `{runtime}` runtime. Memory reads; a scratch
-structure, the debugger and the recon's Mono collector need consent. Single-player or offline software only.
+structure, the debugger and the recon's Mono collector change the target.
 
 ## Steps
 
@@ -22,13 +22,13 @@ structure, the debugger and the recon's Mono collector need consent. Single-play
 5. The count must match `{expectedCount}` and move by one when the user spawns or removes an entity.
 6. No holder: `pointer_find_references(target="{entityAddress}", maxOffset=65536)`. An inline array's data pointer
    has an `offset` of index * stride (the distance between two entities, or a code multiplier: `imul r,r,1A8h`).
-7. Still unclear, with consent for the debugger: [find what accesses](find-writer.md) a field of this entity, such as
+7. Still unclear for the debugger: [find what accesses](find-writer.md) a field of this entity, such as
    `mov eax,[rbx+000004C8]`. Then
    `debugger_start_capture(address="<instructionAddress>", trigger="execute", groupByEffectiveAddress=true)` and
    `debugger_poll_capture(jobId=..., afterSequence=0)` while entities act: an `effectiveAddress` minus 4C8 whose
    `pointerValue` matches step 2 is an entity; step 3 on two of them finds the container. Then
    `runtime_stop_job(jobId=...)` and `debugger_detach()`.
-8. With consent (`structure_list(nameContains="McpEntity")` must list none):
+8. With (`structure_list(nameContains="McpEntity")` must list none):
    `structure_autoguess(name="McpEntity", address="{entityAddress}", size=1024)`, then
    `structure_read(name="McpEntity", addresses=["<e0>", "<e1>", "<e2>"])`: the columns must line up.
 9. Managed field offsets (decimal): .NET, with the collector of [.NET recon](dotnet-recon.md),

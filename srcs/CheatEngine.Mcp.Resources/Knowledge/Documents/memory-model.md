@@ -152,13 +152,11 @@ bytes as zeros and lists them in `unreadable`; memory_dump_to_file can do the sa
 - memory_dump_to_file writes only inside a folder of the `Mcp:Files:AllowedRoots` setting (empty by default, which
   refuses every dump; [configuration](configuration.md)). Unless `memory_dump_to_file.unreadable` is zero, an
   unreadable byte fails the dump and writes no file.
-- `memory_load_from_file(address="<address>", path="<file>")` writes such a copy back. It changes the target: only with
-  consent, into the same process and at the address the copy came from.
+- `memory_load_from_file(address="<address>", path="<file>")` writes such a copy back. It changes the target: write into the same process and at the address the copy came from.
 
 ## Changing protection
 
-This alters the target: only in single-player or offline software the user owns or may modify, after explaining it and
-getting consent ([safety](safety.md)). Try the write first: Cheat Engine's own writers (Lua writeBytes, the Auto
+This alters the target. Try the write first: Cheat Engine's own writers (Lua writeBytes, the Auto
 Assembler) make the pages writable for the write and restore them. Change protection only when a write to a
 read-only page still fails with `memory_write_failed`.
 
@@ -180,7 +178,7 @@ read-only page still fails with `memory_write_failed`.
 A change Cheat Engine refuses fails with `host_refused`, and its hostEffect says what happened:
 
 - `not_applied`: the access is unchanged.
-- `started`: the access changed anyway. Read it again with memory_get_address_info and, with consent, restore the
+- `started`: the access changed anyway. Read it again with memory_get_address_info and restore the
   protection noted in step 1.
 - `unknown`: the access could not be read again; inspect before anything else.
 
@@ -232,8 +230,7 @@ width; if it is not 4 for a 32-bit target, `process_set_pointer_size(pointerSize
 ## Editing a file as a process
 
 Cheat Engine can open a file in place of a process (file-as-process): the memory tools then read and write Cheat
-Engine's in-memory copy of the file. Use it for a file of single-player or offline software the user owns or may
-modify, such as an offline save, with consent for each change ([safety](safety.md)).
+Engine's in-memory copy of the file. Use it for a saved file, such as an offline save.
 
 1. `process_open_file(filename="<absolute path>", startAddress="0x10000000")` **changes the selected target**. Cheat
    Engine detaches its debugger when it can and no longer reaches the game. A resource MCP still owns
@@ -241,7 +238,7 @@ modify, such as an offline save, with consent for each change ([safety](safety.m
    release it first ([errors and recovery](errors-and-recovery.md)).
 2. Map offsets to addresses: Cheat Engine loads the whole file at `startAddress`, so address = startAddress + file
    offset, for `observedFileSize` bytes. Above, file offset 1A2B is `10000000+1A2B`.
-3. Read with `memory_read(address="10000000+1A2B", valueType="int32")`, then write with consent:
+3. Read with `memory_read(address="10000000+1A2B", valueType="int32")`, then write:
    `memory_write(address="10000000+1A2B", valueType="int32", value="999", verify=true)`. For a big-endian file format
    set `memory_read.byteOrder` and `memory_write.byteOrder` to big_endian.
 4. `process_save_file(filename="<new absolute path>")` writes the edited copy to a new file.

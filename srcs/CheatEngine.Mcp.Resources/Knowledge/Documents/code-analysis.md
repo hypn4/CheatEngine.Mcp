@@ -215,7 +215,7 @@ examples assume game.exe at 7FF6A1B00000, so 7FF6A1DF1A30 is game.exe+2F1A30.
 ## Reading what a value means from code
 
 The instructions that read or write a value, from a `debugger_start_capture(address="...", trigger="write")` job (with
-the user's consent, see [debugger](debugger.md)) or from `code_find_references`, tell its type, its meaning and the
+the user's see [debugger](debugger.md)) or from `code_find_references`, tell its type, its meaning and the
 object that holds it. The patterns are written as CE prints them.
 
 | Pattern | Meaning |
@@ -278,12 +278,9 @@ the user sees, saved with the cheat table: write them only when the user wants n
   anchor anything kept on the runtime's names ([Mono and .NET](mono-and-dotnet.md)). IL2CPP code is native code in
   `GameAssembly.dll` ([Unity IL2CPP](unity-il2cpp.md)).
 - One instruction often serves the player and every enemy: [filter shared code](../Workflows/shared-code-filter.md)
-  before patching it. With consent,
-  `debugger_start_capture(address="<instruction>", trigger="execute", groupByEffectiveAddress=true)` lists each
+  before patching it. `debugger_start_capture(address="<instruction>", trigger="execute", groupByEffectiveAddress=true)` lists each
   address it touches (CE's "Find out what addresses this instruction accesses").
-- Code that unpacks or decrypts itself, detects debuggers or ships with anti-cheat: stop and tell the user. Reading
-  code leads to patches, and patches belong only in single-player or offline software the user owns or may modify,
-  never in online or competitive games; explain the change and get consent first ([safety](safety.md)).
+- Code that unpacks or decrypts itself or detects debuggers changes its own code at run time: analyze it before patching.
 
 ## Related
 

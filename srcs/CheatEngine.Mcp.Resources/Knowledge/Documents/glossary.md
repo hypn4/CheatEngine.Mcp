@@ -1,8 +1,7 @@
 # Glossary
 
 Short definitions of Cheat Engine (CE), memory and CheatEngine.Mcp terms, each with the tool that uses it and the page
-that explains it. Read it when a term in a result, an error or another page is unclear. Changes to a target are only
-for single-player or offline software the user may modify, with consent: see [safety](safety.md).
+that explains it. Read it when a term in a result, an error or another page is unclear.
 
 ## Cheat Engine and memory terms
 
@@ -173,7 +172,7 @@ for single-player or offline software the user may modify, with consent: see [sa
 - **Orphan**: Lua state that an earlier activation left in CE: an MCP breakpoint, a speed other than 1, a pause or a
   Lua job that had not ended. `runtime_list_resources` shows it with `orphaned` true. It blocks `process_attach`,
   `process_create` and `process_open_file` (`busy`), but not `debugger_detach`. Release it only with the user's
-  consent, through `runtime_release_resources(includeOrphans=true)`, or acknowledge it at the end of cleanup once the
+  through `runtime_release_resources(includeOrphans=true)`, or acknowledge it at the end of cleanup once the
   user undid it by hand. See [errors and recovery](errors-and-recovery.md).
 - **Owned resource**: what this activation holds in CE or the target (`runtime_list_resources`): a patch, allocation,
   named scanner, registered symbol, breakpoint, speed other than 1, pause, Mono attachment or running job. Its

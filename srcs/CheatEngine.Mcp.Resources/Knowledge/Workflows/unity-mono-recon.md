@@ -3,14 +3,14 @@
 ## Goal
 
 Find class `{className}` and field `{fieldName}` in a Unity Mono game with CE's Mono data collector, as live addresses
-and code; without a class name, start from a scanned value. Attaching injects into the game: consent first.
+and code; without a class name, start from a scanned value. Attaching injects into the game: first.
 
 ## Steps
 
-1. Ask whether the game is offline and free of anti-cheat; stop otherwise. `module_list(nameContains="mono")` must show
+1. `module_list(nameContains="mono")` must show
    `mono-2.0-bdwgc.dll` or `mono.dll`; none, but `GameAssembly.dll`: [Unity IL2CPP](unity-il2cpp-recon.md).
 2. `mono_get_status()`: `attached` true means a collector already runs: use it from step 5 and leave it attached.
-3. Get explicit consent (suggest saving first): the DLL stays until the game exits, `mono_error_ok` stays patched,
+3. Suggest saving first: the DLL stays until the game exits, `mono_error_ok` stays patched,
    CE hooks run until detach, CE may set Uses Mono (then each process open or table load injects again) and show a
    dialog a human must dismiss.
 4. `mono_attach()`: keep `hostEffects`. `invalid_state`: resume (`process_set_paused(paused=false)` or
@@ -30,7 +30,7 @@ and code; without a class name, start from a scanned value. Attaching injects in
    `mono_poll_instance_search(jobId="<jobId>", afterSequence=0)` until `job.state` is not `running`, then
    `runtime_stop_job(jobId="<jobId>")`. `mono_get_object(address="<instance>", maxBacktrack=0)` gives each hit's
    field values to compare.
-9. Code: `mono_list_methods(classHandle="<handle>", nameContains="<method>")`; with consent,
+9. Code: `mono_list_methods(classHandle="<handle>", nameContains="<method>")`;,
    `mono_compile_method(methodHandle="<methodHandle>")` JIT-compiles it in the game: `nativeAddress` feeds
    `code_disassemble(address="<nativeAddress>")` or [find what writes](find-writer.md).
 10. Ask whether to stay attached; otherwise `mono_detach()`.
@@ -45,7 +45,7 @@ and code; without a class name, start from a scanned value. Attaching injects in
 - JIT code has no module (`aob_generate_signature` refuses it): a script scans it with `aobscanregion` over
   `<Class>:<Method>`, which CE resolves by JIT-compiling it, so only while attached.
 - `invalid_state` after a pipe timeout: follow its hint. Retry once (the next call reconnects); if reconnecting
-  failed, `mono_detach()`, then with consent `mono_attach()` once, or on `not_found` or `alreadyEnded` the user
+  failed, `mono_detach()`, then `mono_attach()` once, or on `not_found` or `alreadyEnded` the user
   re-activates Mono in CE's Mono menu. CE's timeout dialog up: the user answers it.
 
 ## Pitfalls

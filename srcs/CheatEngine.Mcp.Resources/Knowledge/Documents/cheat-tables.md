@@ -5,13 +5,10 @@ scripts. A cheat table (`.CT`, XML) saves them with scripts, structures and an o
 before you create, change, activate, delete, load or save records. The address list belongs to Cheat Engine: records
 and freezes survive a plugin disable, and `runtime_release_resources` does not touch them.
 
-## Responsible use
+## Effects of record operations
 
-- Work only on single-player or offline software the user owns or may modify; never on online, competitive or
-  anti-cheat-protected games. See [safety](safety.md).
-- Explain and ask before each change: a create or update value writes target memory, activation freezes a value or
-  runs a script, delete and clear cannot be undone, a table load can run Lua and inject code, and an overwrite
-  replaces a file.
+- A create or update value writes target memory, activation freezes a value or runs a script, delete and clear
+  cannot be undone, a table load can run Lua and inject code, and an overwrite replaces a file.
 
 ## Record fields and types
 
@@ -46,7 +43,7 @@ Record reads and record changes return the same record object: `id`, `index` (po
   as a parent, but Cheat Engine's source saves its type as `Error`, so after a table reload it is a Byte record at
   address `0` that shows `??`, with its children intact.
 - No tool sets hex or signed display of a number, a bit range, a custom type, colour, hotkeys, a freeze direction,
-  the group-header flag or the child options. The user sets them in Cheat Engine, or, with consent, `lua_execute`
+  the group-header flag or the child options. The user sets them in Cheat Engine, or `lua_execute`
   through the `MemoryRecord` Lua class (`ShowAsHex`, `ShowAsSigned`, `Binary.Startbit`, `AllowIncrease`,
   `IsGroupHeader`, `Options`, `createHotkey`). Byte layouts: [value types](value-types.md).
 

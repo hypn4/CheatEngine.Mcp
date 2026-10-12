@@ -3,8 +3,7 @@
 ## Goal
 
 Find a float or double such as health, stamina, speed or a coordinate. `{displayedValue}` is what the game shows (not
-given for a bar without a number); `{description}` names it. Only on single-player or offline software the user may
-modify; each test write and record needs the user's consent.
+given for a bar without a number); `{description}` names it.  
 
 ## Steps
 
@@ -25,11 +24,10 @@ modify; each test write and record needs the user's consent.
    `memory_read_batch(items=[{address="<a1>", valueType="float"}])`.
 7. Neighbours: `memory_read(address="<address>-8", valueType="float", count=6)` (offsets are hex). A maximum often
    follows the current value; X, Y and Z sit 4 bytes apart (8 for doubles).
-8. With consent, test one address at a time:
+8. test one address at a time:
    `memory_write(address="<address>", valueType="float", value="<test value>")`, keep `previous`, ask what changed,
    and restore unless wanted: `memory_write(address="<address>", valueType="bytes", value="<previous>")`.
-9. With consent,
-   `record_create(records=[{description="{description}", address="<address>", variableType=4}])` (5 for a double);
+9. `record_create(records=[{description="{description}", address="<address>", variableType=4}])` (5 for a double);
    with no `value`, nothing is written. Keep the record id.
 
 ## Decisions

@@ -3,12 +3,12 @@
 ## Goal
 
 Run the attached game at `{speed}` times its normal speed (0.5 is half speed, 2 is double), confirm the effect with the
-user, then restore normal speed. Only for single-player or offline games that the user owns or may modify.
+user, then restore normal speed. 
 
 ## Steps
 
-1. Ask whether the game is single-player or offline and free of anti-cheat; stop otherwise. A server keeps real time,
-   so an online game desyncs or disconnects, and changing it can get the account banned
+1. A server keeps real time,
+   so an online game desyncs or disconnects.
    ([safety](../Documents/safety.md)).
 2. `speedhack_get_state()`: keep `speed`, the value to restore, and `hooksInstalled`. If `hooksInstalled` is already
    true, CE's speedhack already ran in this process (its checkbox or hotkeys, a table script, an earlier session), and

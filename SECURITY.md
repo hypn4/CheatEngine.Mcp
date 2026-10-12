@@ -56,12 +56,5 @@ Out of scope:
 - Cheat Engine itself, its kernel driver, DBVM and its Lua API: report those to the Cheat Engine project. Issues in CheatEngine.Client or CheatEngine.SDK belong to those projects.
 - Anything that requires control of the Windows account or administrator rights already, including other programs running as the same user: they can read the discovery records and call a backend, and authentication is not a boundary against them.
 - Harm caused by a cheat table, Auto Assembler script or Lua script that the user chose to run.
-- Requests to bypass anti-cheat, DRM or license checks, or to hide Cheat Engine from them.
 - Misuse of the software against other people's software, games, accounts or data.
 
-## Responsible use
-
-Use CheatEngine.Mcp only on software you own or are authorized to modify: your own programs, single-player or offline games, the Cheat Engine tutorials and disposable test targets.
-Respect each program's license and terms of service.
-Do not use it to cheat in online or multiplayer games, to bypass anti-cheat, DRM or license checks, or to read other people's data.
-The project does not support such use, and the knowledge it serves to agents (`cheatengine://docs/safety`) tells them to refuse it.

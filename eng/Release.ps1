@@ -16,7 +16,7 @@ param(
     [string] $DistributionPath,
     [string] $OutputDirectory,
     [ValidatePattern('^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$')]
-    [string] $Repository = 'CheatEngineNet/CheatEngine.Mcp',
+    [string] $Repository = 'hypn4/CheatEngine.Mcp',
     [string] $NotesFile,
     [switch] $Upload,
     [switch] $Publish

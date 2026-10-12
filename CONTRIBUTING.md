@@ -10,7 +10,6 @@ Each project's `README.md` states its role and dependencies, the [test project R
 
 ## Ground rules
 
-- Keep to responsible use: features, examples and tests target software you own or are authorized to modify, and the project does not accept work whose purpose is to bypass anti-cheat, DRM or license checks; see [SECURITY.md](SECURITY.md) and the [safety document](srcs/CheatEngine.Mcp.Resources/Knowledge/Documents/safety.md).
 - Cheat Engine is reached only through the `CheatEngine.Client` NuGet package; the plugin project alone also references `CheatEngine.SDK` directly, for the generated entry point and the native Lua bridge. No source checkout, submodule or other Cheat Engine wrapper.
 - Never expose a bearer token: not in code, tests, logs, screenshots, issues or pull requests. The same goes for discovery records under `%LOCALAPPDATA%\CheatEngine.Mcp\instances`, personal paths and e-mail addresses.
 - Preserve licenses, notices and provenance headers, and unrelated work you find in the tree: never reset, discard or reformat it wholesale.

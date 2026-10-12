@@ -3,8 +3,8 @@
 ## Goal
 
 Find the coordinates of {description} as `{valueType}` (auto: `double` on Unreal Engine 5, `float` otherwise), prove
-which copy the game obeys, save them and, with consent, teleport. `{address}`, when given, is the X coordinate and
-skips the scan. Single-player or offline games only.
+which copy the game obeys, save them and teleport. `{address}`, when given, is the X coordinate and
+skips the scan. 
 
 ## Steps
 
@@ -25,10 +25,10 @@ skips the scan. Single-player or offline games only.
    change with movement are X, Y and Z. Nearby, a velocity triple is non-zero only while moving, and rotation
    changes when the player turns.
 7. Save: `memory_read(address="<X>", valueType="<type>", count=3)`; keep the values.
-8. Teleport, with consent and after an in-game save: optionally `process_set_paused(paused=true)`, then
+8. Teleport and after an in-game save: optionally `process_set_paused(paused=true)`, then
    `memory_write_batch(items=[{address="<X>", valueType="<type>", value="<x>"}, ...], verify=true)` with the saved
    values plus a little height, then `process_set_paused(paused=false)`. The player must appear there and stay.
-9. Keep, with consent: `record_create(records=[{description="{description} X", address="<X>", variableType=4}])`
+9. Keep `record_create(records=[{description="{description} X", address="<X>", variableType=4}])`
    (variableType 5 for `double`), then Y and Z as its children, which follow X:
    `record_create(records=[{description="{description} Y", address="+4", variableType=4, parentId=<idX>}, ...])`,
    Z at `+8` (`+8` and `+10` for `double`: offsets are hexadecimal).

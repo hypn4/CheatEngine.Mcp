@@ -4,9 +4,7 @@ Read this when a value scan ends with no rows, keeps too many rows, or finds an 
 entry names the likely cause and the fix with this server's tools. The scan loop is in [value scans](value-scans.md);
 how games store numbers is in [value types](value-types.md).
 
-Scans only read the target, but several fixes pause it, attach the debugger, inject Mono's collector or write memory:
-explain each one and get the user's consent first. Work only on single-player or offline software the user owns or may
-modify (see [safety](safety.md)).
+Scans only read the target, but several fixes pause it, attach the debugger, inject Mono's collector or write memory.
 
 ## Check these first
 
@@ -31,13 +29,12 @@ modify (see [safety](safety.md)).
 | Negative values, ordered comparisons | Cheat Engine compares integers unsigned for `greater`, `less`, `increased` and `decreased`: 0 to -1 counts as increased, and `less` than 10 drops negatives. `between` compares signed when a bound is negative: use it, or `changed`. |
 | Scaled storage | 12.5 may be stored as 125 or 1250, money as cents, 75 % as 0.745 to 0.755. Scan each guess, or scan `unknown`, then `increased` or `decreased`, which work at any scale. |
 | Engine encoding | Identify the engine ([engine triage](../Workflows/engine-triage.md)). RPG Maker XP/VX/Ace: `int32` 2n+1. Electron, NW.js, RPG Maker MV/MZ: `double`, then `int32` 2n (older 64-bit V8: n). Flash: `int32` `between` 8n and 8n+7. GameMaker: `double`. Godot: `int64` or `double`. See [value types](value-types.md#tagged-and-engine-specific-numbers). |
-| Encoded (XOR key, offset, second copy) | `unknown`, then only `changed` and `unchanged`: encoding scrambles order. The writer's registers hold the plain value ([find what writes](../Workflows/find-writer.md)). Encryption from an anti-cheat or anti-tamper library means stop. |
+| Encoded (XOR key, offset, second copy) | `unknown`, then only `changed` and `unchanged`: encoding scrambles order. The writer's registers hold the plain value ([find what writes](../Workflows/find-writer.md)). |
 | Computed on demand | Attack = base + gear + buff has no stored copy: scan the inputs. |
-| Changes during the scan | With consent, `process_set_paused(paused=true)` before each scan, poll until it ends, then `process_set_paused(paused=false)`. MCP tracks its own pause (`process_set_paused.resourceId`), which blocks a target change until resumed. Or scan `unknown`, then `changed` and `unchanged`. |
+| Changes during the scan | `process_set_paused(paused=true)` before each scan, poll until it ends, then `process_set_paused(paused=false)`. MCP tracks its own pause (`process_set_paused.resourceId`), which blocks a target change until resumed. Or scan `unknown`, then `changed` and `unchanged`. |
 | Emulator or mapped memory | Skipped by default: see "Emulators and mapped memory" below. |
 | Main's inherited settings | A range, protection, fast-scan, rounding or region-kind choice in Cheat Engine excludes it: read `scan_get_status.settings` (next section). |
 | Named scan scoped wrongly | `scan_first.endAddress` is exclusive. `scan_first.writable` set to `excluded`, a `scan_first.alignment` the field's address is not a multiple of, or a wrong `scan_first.lastDigits` hides it. |
-| Online, server-side or anti-cheat protected | Out of scope: stop and tell the user. |
 
 ## Settings main inherits from Cheat Engine
 
@@ -121,8 +118,7 @@ alike ([value types](value-types.md#big-endian-data-in-emulators)).
 
 ## The result does not behave
 
-- **A write reverts, or only the HUD changes.** A display copy, or a value recomputed every frame. With consent,
-  `debugger_attach(interface="windows")`, then
+- **A write reverts, or only the HUD changes.** A display copy, or a value recomputed every frame. `debugger_attach(interface="windows")`, then
   `debugger_start_capture(address="<address>", trigger="write", aggregateByInstruction=true)`. Poll
   `debugger_poll_capture(jobId="<jobId>")` while the user changes the value, then `runtime_stop_job(jobId="<jobId>")`,
   which discards the hits. Keep the address that game logic writes (damage, purchase), not a UI refresh
@@ -134,14 +130,14 @@ alike ([value types](value-types.md#big-endian-data-in-emulators)).
 - **A freeze does not hold.** `record_set_active(ids=[<id>], active=true)` rewrites the value every 100 ms by default
   (Cheat Engine's Freeze interval setting); the game runs in between, so one large hit can still kill. A record left
   inactive carries `record_set_active.failure`; its reason `inaccessible` means Cheat Engine could not write the value.
-  Freezing a display copy does nothing. With consent, stop the writer instead: [NOP patch](../Workflows/nop-patch.md)
+  Freezing a display copy does nothing. stop the writer instead: [NOP patch](../Workflows/nop-patch.md)
   or [AOB injection](../Workflows/aob-injection.md).
 - **Gone after a restart or level load.** Heap addresses move and old results mean nothing: rescan. For a lasting
   address, build a [pointer chain](pointers.md) ([pointer scan](../Workflows/pointer-scan.md)) or inject at the writer
   ([injection copy base](../Workflows/injection-copy-base.md)).
 - **Right once, then other data.** The object was freed or moved and its memory reused: a new level, a pooled object,
   or a moving garbage collector (.NET, Java, JavaScript). Re-find the value, then reach it through its owner, a
-  pointer chain or the engine's metadata ([game engines](game-engines.md)). In a Unity game, with consent,
+  pointer chain or the engine's metadata ([game engines](game-engines.md)). In a Unity game
   `mono_attach()` (target code execution gate), then `mono_get_object(address="<hit>")` names the object's class and
   lists its fields; `mono_get_object.offsetInObject` is the hit's field offset ([Mono and .NET](mono-and-dotnet.md)).
 
@@ -152,7 +148,7 @@ alike ([value types](value-types.md#big-endian-data-in-emulators)).
 | `not_attached` on main | no process is open in Cheat Engine | `process_attach` |
 | `busy` on main | a main scan runs, or its Repeat box is ticked | poll `scan_get_status`, or `scan_stop(scannerName="main")`, which unticks Repeat and asks a running scan to stop; its partial results need `scan_reset` and a new `scan_first` to be complete |
 | `busy` on `scan_first` | a first scan with the other `includeMapped` choice is running | repeat after it returns |
-| `invalid_state` on `scan_first` | the scanner already holds a scan | with consent, `scan_reset` (on main it runs New Scan and clears the user's list) |
+| `invalid_state` on `scan_first` | the scanner already holds a scan | `scan_reset` (on main it runs New Scan and clears the user's list) |
 | `invalid_state` on `scan_next` | nothing to narrow, a failed scan, a named scanner not in `ResultsReady`, or a main type MCP cannot narrow (Binary, All, Grouped, custom) | reset and rescan, or narrow in Cheat Engine |
 | `invalid_state` on `scan_list_results` | no completed scan, or an unknown-value baseline without rows | `scan_next` first |
 | `invalid_argument` on `value` or `upperValue` | not decimal (`0x`, separators), outside the type's range, empty text, NaN or Infinity | decimal text; the signed equivalent for large unsigned values |

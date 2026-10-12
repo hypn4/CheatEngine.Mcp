@@ -4,11 +4,11 @@
 
 Find class `{className}` and field `{fieldName}` in a Unity IL2CPP game in `{mode}` mode: `offline` (the default)
 reads memory only, with the user's own dump; `collector` injects CE's Mono data collector, which names classes live
-but changes the game (consent first).
+but changes the game (first).
 
 ## Steps
 
-1. Ask whether the game is offline and free of anti-cheat; stop otherwise. `module_list(nameContains="GameAssembly")`
+1. `module_list(nameContains="GameAssembly")`
    must find `GameAssembly.dll`; `mono-2.0-bdwgc.dll` instead means [Unity Mono](unity-mono-recon.md).
 2. `module_get(module="GameAssembly.dll")`: keep `size`, `is64Bit` (the offsets below assume true) and
    `pe.timeDateStamp` (the build).
@@ -33,13 +33,13 @@ but changes the game (consent first).
    `{className}` (the global may be unset until the game has used the class), then
    `memory_read(address="[[GameAssembly.dll+<TypeInfoRVA>]+B8]+<offset>", valueType="int32")`. `B8` holds for metadata
    v24.1 to v29 (about Unity 2018.3 to 2022; UNVERIFIED per build): confirm it on a class you know.
-8. With consent, map the fields: `structure_create(name="{className}", elements=[{offset="<offset>",
+8. map the fields: `structure_create(name="{className}", elements=[{offset="<offset>",
    name="{fieldName}", valueType="int32"}])`, then `structure_read(name="{className}", addresses=["<obj>"])`.
 
 ### mode: collector
 
 4. `mono_get_status()`: `attached` true means a collector already runs: use it from step 7 and leave it attached.
-5. Get explicit consent: the DLL stays until the game exits, CE hooks run until detach, CE may set Uses Mono (then
+5. The DLL stays until the game exits, CE hooks run until detach, CE may set Uses Mono (then
    each process open or table load injects again), a thread registers compiled methods as symbols, and CE may show
    a dialog a human must dismiss.
 6. `mono_attach()`: `il2Cpp` should be true; keep `hostEffects`. `invalid_state`: resume
@@ -65,8 +65,7 @@ but changes the game (consent first).
 
 ## Decisions
 
-- Encrypted metadata, renamed exports, a packed `GameAssembly.dll`, `Obscured...` field types or an anti-cheat: a
-  protected game; stop and tell the user.
+- Encrypted metadata, renamed exports, a packed `GameAssembly.dll`, `Obscured...` field types mean the standard offsets and dumps will not apply.
 - RVAs survive restarts of one build, not an update: anchor code on a [signature](make-aob-signature.md).
 - Several objects: prefer a static singleton (`Instance`) as the root.
 - Collector `invalid_state` after a pipe timeout: follow its hint (retry once: the next Mono call reconnects).

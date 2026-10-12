@@ -2,16 +2,12 @@
 
 The session rules for every Cheat Engine 7.7 (CE) session driven through CheatEngine.Mcp, and the index of the guided
 workflows: read it before any target work. Each workflow is an MCP prompt whose body is also served as
-`cheatengine://docs/workflows/<name-with-dashes>`. Setup and first calls: [getting-started](getting-started.md);
-consent, backups and undo: [safety](safety.md).
+`cheatengine://docs/workflows/<name-with-dashes>`. Setup and first calls: [getting-started](getting-started.md); backups and undo: [safety](safety.md).
 
-## Scope and consent
+## Effects and backups
 
-- Work only on single-player or offline software the user owns or may modify. Stop at online or competitive games and
-  at anti-cheat-protected titles; never help bypass anti-cheat, DRM or licence checks, or hide from detection.
-- Attach only to the process the user named; ask whether the game is offline and free of anti-cheat.
-- Before each change to the game or to CE, explain what it changes and how it is undone, and get consent
-  ([safety](safety.md#consent-for-each-change) lists them). Suggest a save backup first; never advise turning off
+- Before each change to the game or to CE, know what it changes and how it is undone
+  ([safety](safety.md#what-a-change-can-do) lists them). Suggest a save backup first; never advise turning off
   Windows protections.
 
 ## Golden rules
@@ -135,7 +131,7 @@ every running job.
   leftover breakpoints, speed, pause and failed cleanups return as `runtime_list_resources.orphaned` entries.
 
 Clean up with [cleanup_session](../Workflows/cleanup-session.md), in its order: only what this session created, newest
-first, with consent; [session_report](../Workflows/session-report.md) gives a read-only account first. Stop at the
+first [session_report](../Workflows/session-report.md) gives a read-only account first. Stop at the
 first incomplete release and report it.
 
 ## Gates and blocking calls
@@ -147,7 +143,7 @@ first incomplete release and report it.
   plugin; a prompt's description names the gates it needs.
 - `_meta` key `cheatengine/dispatchClass`: `short` (100 ms budget), `host_scan` (grows with the target: `scan_first`,
   `aob_find`, `pointer_find_references`), `blocking_native` (seconds: `code_start_dissect`, the exec tools) or
-  `may_prompt` (a CE dialog may wait for a person, as with `table_load`; [safety](safety.md#consent-for-each-change)).
+  `may_prompt` (a CE dialog may wait for a person, as with `table_load`; [safety](safety.md#what-a-change-can-do)).
   Warn before `may_prompt`.
 - `exec_call_remote` and `exec_call_method` take integer, float or double arguments: put text or buffers in a
   `memory_allocate` allocation, pass its address, and keep it after a timeout, since the call may still run.
@@ -198,9 +194,9 @@ completion is not an error: list instead.
 
 | Prompt | Use when | Key tools | Docs |
 |---|---|---|---|
-| [attach_and_orient](../Workflows/attach-and-orient.md) | Start of any session | `instance_list`, `runtime_get_overview`, `process_attach` | [safety](safety.md), [mono-and-dotnet](mono-and-dotnet.md) |
-| [engine_triage](../Workflows/engine-triage.md) | Which engine, how it stores values | `module_list`, `module_list_exports`, `aob_find_value` | [game-engines](game-engines.md), [mono-and-dotnet](mono-and-dotnet.md), [safety](safety.md) |
-| [plan_cheat](../Workflows/plan-cheat.md) | A goal without a technique | the chosen workflows | [workflows](workflows.md), [cheat-recipes](cheat-recipes.md), [safety](safety.md) |
+| [attach_and_orient](../Workflows/attach-and-orient.md) | Start of any session | `instance_list`, `runtime_get_overview`, `process_attach` | [mono-and-dotnet](mono-and-dotnet.md) |
+| [engine_triage](../Workflows/engine-triage.md) | Which engine, how it stores values | `module_list`, `module_list_exports`, `aob_find_value` | [game-engines](game-engines.md), [mono-and-dotnet](mono-and-dotnet.md) |
+| [plan_cheat](../Workflows/plan-cheat.md) | A goal without a technique | the chosen workflows | [workflows](workflows.md), [cheat-recipes](cheat-recipes.md) |
 | [find_known_value](../Workflows/find-known-value.md) | The value is shown as a number | `scan_first`, `scan_next`, `record_create` | [value-scans](value-scans.md), [ce-tutorial](ce-tutorial.md), [troubleshooting-scans](troubleshooting-scans.md) |
 | [find_unknown_value](../Workflows/find-unknown-value.md) | Only a bar or a change is visible | `scan_first`, `scan_next`, `memory_read_samples` | [value-scans](value-scans.md), [troubleshooting-scans](troubleshooting-scans.md) |
 | [find_float_value](../Workflows/find-float-value.md) | Floats, percentages, rounded displays | `scan_first`, `scan_next`, `memory_read` | [value-scans](value-scans.md), [structures](structures.md), [troubleshooting-scans](troubleshooting-scans.md) |

@@ -4,14 +4,8 @@ The engine or runtime a game uses decides how it stores numbers, which anchor su
 run next. Read this page right after attaching and before the first scan, because a scan with the wrong type finds
 nothing. The guided version is [engine_triage](../Workflows/engine-triage.md).
 
-## Scope first
+## First checks
 
-- Work only on single-player or offline games the user owns or may modify ([safety](safety.md)). Unreal and Unity
-  games with online or co-op modes often ship anti-cheat (Easy Anti-Cheat, BattlEye, kernel drivers), even for offline
-  play. Ask before attaching (if already attached, before anything else), and stop when the game is online or
-  protected.
-- "Obscured" or encrypted value types, DRM and licence checks mean the developer opposes modification. Tell the user
-  and stop; do not decode or bypass them.
 - A save editor, the game's own console or its mod support is often simpler than memory editing. Offer it.
 
 ## Collect the evidence
@@ -107,7 +101,7 @@ Every step below only reads.
 - `UnityEngine.Object` wrappers point at native C++ objects (`m_CachedPtr`). Transforms and positions live in native
   memory, not in C# fields. Unity's garbage collector does not move objects, but scene changes destroy and recreate
   them.
-- **Mono route.** With consent, `mono_attach()` injects CE's data collector (targetCodeExecution gate) and changes CE
+- **Mono route.** `mono_attach()` injects CE's data collector (targetCodeExecution gate) and changes CE
   state: it can set the table's Uses Mono option, after which CE injects the collector again on each process open
   (`process_attach.monoAutoAttach` reports that case; [mono-and-dotnet](mono-and-dotnet.md)). Then
   `mono_find_class(namespace="", className="Player")` and
@@ -196,7 +190,6 @@ anchor on static fields (`dotnet_get_type` reports their `staticAddress`), not o
   networked copy. A health scan returns at least two hits, and a write to the client copy is overwritten.
 - Keep the hit whose writer is in `server.dll`: [find_writer](../Workflows/find-writer.md), then
   `memory_get_address_info(addresses=["<instruction address>"])` names the module. Root pointer paths in `server.dll`.
-- Multiplayer Source games use VAC: out of scope.
 
 ## Java
 
@@ -242,7 +235,7 @@ anchor on static fields (`dotnet_get_type` reports their `staticAddress`), not o
   ([troubleshooting-scans](troubleshooting-scans.md#emulators-and-mapped-memory)).
 - Big-endian: GameCube and Wii (Dolphin), Wii U (Cemu), PS3 (RPCS3), Xbox 360. Little-endian: PS1, PS2 (PCSX2), PSP
   (PPSSPP), GBA, DS, Switch. Memory tools read and write 2-, 4- and 8-byte numbers in guest order:
-  `memory_read(address="emuBase+3A1240", valueType="int32", byteOrder="big_endian")`, and after consent
+  `memory_read(address="emuBase+3A1240", valueType="int32", byteOrder="big_endian")`, and then
   `memory_write(address="emuBase+3A1240", valueType="int32", value="999", byteOrder="big_endian", verify=true)`. The
   batch items and `memory_read_samples` take the same option.
 - Scans have no byte order. Convert an exact value:

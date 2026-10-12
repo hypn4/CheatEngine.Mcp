@@ -42,7 +42,7 @@ Fail blocks the apply; warn needs the user's agreement.
   (targetCodeExecution), `kalloc` (kernelAccess); `{$luacode}`, `include`, `loadbinary` and unknown or Lua-registered
   commands (`USEMONO`) need unsafeLua and targetCodeExecution. While one is off, `asm_apply` answers
   `capability_disabled`; never change a setting. Enabling a record needs only the autoAssembler gate: explain first.
-- All pass: apply with consent as [AOB injection](aob-injection.md) does, or enable the record with consent:
+- All pass: apply as [AOB injection](aob-injection.md) does, or enable the record:
   `record_set_active(ids=[{recordId}], active=true)`; `active` false with a `failure` (such as `assert_failed`) fails.
 
 ## Pitfalls
@@ -53,7 +53,7 @@ Fail blocks the apply; warn needs the user's agreement.
 - `[DISABLE]` is checked without the symbols `[ENABLE]` registers: a bare `name:` line passes (unless `{$STRICT}`),
   `name+4` is rejected although a release would resolve it; register a label at the exact site instead.
 - An active record has already patched its site: its patterns no longer match, and steps 6 and 7 show its own patch
-  and names. With consent, disable it first: `record_set_active(ids=[{recordId}], active=false)`.
+  and names. disable it first: `record_set_active(ids=[{recordId}], active=false)`.
 - Record ids expire when a table loads; find the record again with `record_list()`.
 
 ## Report

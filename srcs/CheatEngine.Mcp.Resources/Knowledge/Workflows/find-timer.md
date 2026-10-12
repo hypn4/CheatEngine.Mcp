@@ -4,7 +4,7 @@
 
 Find the `{kind}` timer behind {description}; the game shows `{displayedValue}` when it shows a number. Tell the code
 that sets it from the code that counts it, then choose a remedy with the user. Writes, the debugger and records need
-consent. Single-player or offline games only.
+
 
 ## Steps
 
@@ -27,13 +27,13 @@ consent. Single-player or offline games only.
 6. At 64 rows or fewer: `scan_list_results(maximumResults=64)`, then
    `memory_read_samples(addresses=["<a1>", "<a2>"], valueType="<type>", durationMs=5000)` while it runs: a timer
    changes at a steady rate (1 per second for seconds, 60 for frames) and stops at its limit.
-7. Test with consent: `memory_write(address="<timer>", valueType="<type>", value="0")` on a remaining-time cooldown
+7. Test `memory_write(address="<timer>", valueType="<type>", value="0")` on a remaining-time cooldown
    should make the ability ready at once. Keep `memory_write.previous`; restore with
    `memory_write(address="<timer>", valueType="bytes", value="<previous>")` unless the change is wanted.
 8. The code: [find what writes](find-writer.md) the timer while the user starts it (uses the ability) and lets it
    run. The writer hit once per start sets the full duration; the one hit every frame is the counter here, not a
    display copy: a `subss` or `addss` of the frame time before the store, or a `dec` or `sub` on the field.
-9. Keep, with consent: `record_create(records=[{description="{description}", address="<timer>", variableType=4}])`
+9. Keep `record_create(records=[{description="{description}", address="<timer>", variableType=4}])`
    (variableType 2 for `int32`, 5 for `double`); keep the record id.
 
 ## Decisions

@@ -5,10 +5,7 @@ memory, writes instructions and bytes, and registers symbols. Read this page bef
 script with the `asm_*` tools. [x64-injection](x64-injection.md) covers the machine-level rules and
 [aob-signatures](aob-signatures.md) the patterns that locate code.
 
-An applied script changes the target's code. Use it only on single-player or offline software the user owns or may
-modify, never on online, competitive or anti-cheat-protected games. Explain what a script changes, get the user's
-consent before each apply or record activation, and ask them to save first: a bad injection crashes the target
-([safety](safety.md)).
+An applied script changes the target's code. Ask the user to save first: a bad injection crashes the target.
 
 ## Tools
 
@@ -287,7 +284,7 @@ an instruction only the player executes, or filter ([shared code](../Workflows/s
 2. Generate the scaffold (or take the user's script) and edit only the cave
    ([AOB injection](../Workflows/aob-injection.md)).
 3. `asm_check(script=..., name="infinite HP")` until `accepted` is true (after `unsupported`, review by reading).
-4. Explain the change, get consent, and ask the user to save.
+4. Ask the user to save.
 5. `asm_apply(script=..., name="infinite HP")`. Keep `patchId` (with its `instanceId` at the gateway) and read
    `hostWarnings`. If `retained` is false, the target changed during the apply: `patchId` is only an attempt id, and
    `requiresManualRecovery` tells whether the patch may remain in the old target.
@@ -323,7 +320,7 @@ an instruction only the player executes, or filter ([shared code](../Workflows/s
 - `canDisable` false in `asm_list_patches`: CE's Lua state was detached or replaced, and a release will be refused.
 - Release every patch before `process_attach`: a retained patch makes a process change fail with `busy`, and a patch
   left in a process CE switched away from cannot be disabled, even after switching back. `runtime_release_resources`
-  releases every owned resource, patches included: use it only at the end, with consent
+  releases every owned resource, patches included: use it only at the end
   ([clean up a session](../Workflows/cleanup-session.md)).
 - After a timeout or a lost connection the apply may have happened: read `asm_list_patches` and disassemble the site
   before any retry. More in [errors-and-recovery](errors-and-recovery.md).

@@ -4,7 +4,7 @@
 
 Find where the target holds `{text}` (encoding `{encoding}`; `auto` tries UTF-16, then UTF-8), its container and
 owner, and, when `{purpose}` is `edit`, change it in place at the same length or shorter. Searches only read; an edit
-needs the user's consent, on single-player or offline software the user may modify.
+changes the target.
 
 ## Steps
 

@@ -2,8 +2,7 @@
 
 Address parameters take Cheat Engine (CE) address expressions, in which every number is hex. Offsets, sizes, values
 and results use stricter formats, listed here by parameter. Read this before you build an address, convert a pointer
-chain or pass a number whose base matters. Writes follow [safety](safety.md): single-player or offline software, with
-the user's consent.
+chain or pass a number whose base matters. Writes follow [safety](safety.md).
 
 ## Address expressions
 
@@ -68,7 +67,7 @@ handler, the Lua fallback included.
 
 - Write only the forms of the table above: no `$`, no quotes except around a module name, and no Lua syntax such as
   function calls or braces.
-- Run Lua only through lua_execute, which needs Mcp:EnableUnsafeLua and the user's consent; see [Lua](lua.md).
+- Run Lua only through lua_execute, which needs Mcp:EnableUnsafeLua; see [Lua](lua.md).
 
 ## Pointer chains in three notations
 

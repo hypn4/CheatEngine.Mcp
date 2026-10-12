@@ -5,9 +5,7 @@ level in `GWorld`: better roots than a blind pointer scan. Read this after
 [engine triage](../Workflows/engine-triage.md) names Unreal; the guided version is
 [unreal_recon](../Workflows/unreal-recon.md).
 
-Most steps only read; ask consent before a write, a debugger capture or a Lua script. Work only on single-player or
-offline games the user owns or may modify. Some UE games ship Easy Anti-Cheat or BattlEye (an `EasyAntiCheat` or
-`BattlEye` folder in the game): stop there ([safety](safety.md)).
+Most steps only read.
 
 The layouts below are typical x64 ones from public research and Cheat Engine's UnrealEngineTools. Forks, versions and
 patches change them: each offset is UNVERIFIED for the build in front of you until a check on a known object passes.
@@ -180,7 +178,7 @@ dereference order. With the user's agreement:
   older builds keep properties in Children) and PropertiesSize (the instance size).
 - Each `FProperty` has a name, ElementSize and Offset_Internal, the field's offset in the instance; walk SuperStruct
   for inherited fields. Where these members sit varies by version: confirm them on a class you know.
-- A whole class needs a bounded `lua_execute` script (unsafeLua gate, consent; [Lua](lua.md)) or a user-run dumper.
+- A whole class needs a bounded `lua_execute` script (unsafeLua gate; [Lua](lua.md)) or a user-run dumper.
 
 ## External SDK dumpers (the user's choice)
 
@@ -194,8 +192,8 @@ dereference order. With the user's agreement:
 ## Pitfalls
 
 - A position has several copies (root component, cached transforms, movement component), and the code writing it
-  serves every actor: use the [shared code filter](../Workflows/shared-code-filter.md) before any patch. With consent
-  to attach the debugger, `debugger_start_capture(address="<writer>", trigger="execute", groupByEffectiveAddress=true)`
+  serves every actor: use the [shared code filter](../Workflows/shared-code-filter.md) before any patch.
+  To attach the debugger, `debugger_start_capture(address="<writer>", trigger="execute", groupByEffectiveAddress=true)`
   lists each address the instruction touches ([debugger](debugger.md)). Each minus the displacement is an object:
   its class name (index at `[<base>+10]+18`), or its actor's for a component (Outer at +20), tells the player from
   the rest.

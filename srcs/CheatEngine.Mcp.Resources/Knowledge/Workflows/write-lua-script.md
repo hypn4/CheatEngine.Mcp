@@ -4,7 +4,7 @@
 
 Write, show and run one bounded `lua_execute` chunk that does this: {purpose}. The declared effect is `{effect}`
 (read_only reads only; mutating changes the game or Cheat Engine). Use Lua only for a Cheat Engine feature that no
-tool covers, only on single-player or offline software the user owns or may modify.
+tool covers.
 
 ## Steps
 
@@ -21,8 +21,7 @@ tool covers, only on single-player or offline software the user owns or may modi
    - no Mono functions (the Mono tools guard CE's pipe) and no `openProcess`: a target switch breaks MCP's releases;
    - read_only: only reading functions; mutating: read and return the old value, change it, read it back.
 4. Show the full source and say what it reads, what it changes and what stays after it (globals, timers, breakpoints,
-   symbols, allocations). With `{effect}` mutating, wait for explicit consent to this exact source; with read_only,
-   still get a go-ahead.
+   symbols, allocations).
 5. `lua_execute(source="<the chunk>", chunkName="=mcp-script")`.
 6. Read the result:
    - `ok` true, `hostEffect` `completed`: use `returnValues`. A `droppedOpaqueCount` above 0 means functions or CE
@@ -41,7 +40,6 @@ tool covers, only on single-player or offline software the user owns or may modi
 - A read_only draft that turns out to need a write is mutating: show it again and ask.
 - Long work: split it into short chunks that each return a cursor, or use a tool that runs as a job.
 - A lasting effect (timer, thread, breakpoint callback) only when the user wants one, with a chunk that stops it.
-- Anti-cheat bypass, DRM or licence cracking and detection evasion: refuse.
 
 ## Pitfalls
 

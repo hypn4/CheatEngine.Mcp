@@ -28,7 +28,7 @@ public sealed class CheatEngineDocResources
 	[McpServerResource(UriTemplate = Docs + "getting-started", Name = "doc_getting_started",
 		Title = "Getting started", MimeType = Markdown)]
 	[Description("Start here when new: what the plugin and gateway are, the first calls of a session, the settings "
-				 + "that gate features, where the docs and prompts live, scope and consent, and how to release what "
+				 + "that gate features, where the docs and prompts live, and how to release what "
 				 + "MCP holds.")]
 	public static ReadResourceResult GettingStarted()
 	{
@@ -321,11 +321,11 @@ public sealed class CheatEngineDocResources
 		return Document("kernel");
 	}
 
-	/// <summary>Safety and responsible use.</summary>
+	/// <summary>Safety.</summary>
 	/// <returns>The document.</returns>
-	[McpServerResource(UriTemplate = Docs + "safety", Name = "doc_safety", Title = "Safety and responsible use",
+	[McpServerResource(UriTemplate = Docs + "safety", Name = "doc_safety", Title = "Safety",
 		MimeType = Markdown)]
-	[Description("Read before the first change: allowed targets, consent, backups, what the four gates do and do "
+	[Description("Read before the first change: backups, what the four gates do and do "
 				 + "not stop, what MCP tracks and how to undo the rest, and the DBK/DBVM and Windows-protection "
 				 + "rules.")]
 	public static ReadResourceResult Safety()

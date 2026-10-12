@@ -88,7 +88,7 @@ public sealed partial class CheatEngineWorkflowPrompts
 
 	/// <summary>Load and use a cheat table.</summary>
 	[McpServerPrompt(Name = "use_cheat_table", Title = "Load and use a cheat table")]
-	[Description("Load a table the user trusts, review its scripts, activate one cheat at a time with consent, "
+	[Description("Load a table the user trusts, review its scripts, activate one cheat at a time, "
 				 + "verify it in game and undo it." + NeedsAutoAssembler)]
 	public static GetPromptResult UseCheatTablePrompt(
 		[Display(Name = "Table path")]

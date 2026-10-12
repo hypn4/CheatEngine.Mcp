@@ -18,7 +18,7 @@ condition and the workflow to follow; use its part for {tutorial}.
    the password on its first line, "(PW=...)": a debugger or injection mistake can crash the tutorial.
 4. Follow the mapped workflow one call at a time and say which button to press between scans (the step window names
    them). A main-scanner scan returns at once: poll `scan_get_status(scannerName="main")` until `isScanning` is false.
-5. Ask consent before every write, freeze, patch, injection and debugger attach, even here. Keep the ids the workflow
+5. Keep the ids the workflow
    returns: record ids, patchId, jobId.
 6. Check the win condition with the user: the tutorial enables its Next button; gtutorial ends the level.
 7. Before the next step, undo what is no longer needed: `runtime_stop_job(jobId="<jobId>")`,
@@ -33,7 +33,7 @@ condition and the workflow to follow; use its part for {tutorial}.
 - `capability_disabled` in a patch or injection workflow: Mcp:EnableAutoAssembler is off (`runtime_get_info()`
   reports it in `gates`); report it and stop there.
 - The tutorial crashed: restart it and type the saved password. Deactivate this session's records (their addresses
-  belong to the old process), then `runtime_list_resources()` and, with consent, `runtime_release_resources()`. An
+  belong to the old process), then `runtime_list_resources()` and `runtime_release_resources()`. An
   entry left `cleanup_failed` because the old process is gone has nothing to undo: tell the user, then
   `runtime_release_resources(acknowledgeIds=["<id>"])`, which releases the rest too. Attach to the new process.
 - Addresses below are offsets in the target's module (+495D8 is `"Tutorial-x86_64.exe"+495D8`), read from the
@@ -54,7 +54,7 @@ condition and the workflow to follow; use its part for {tutorial}.
 
 - tutorial (password 090453): int32 health 100; "Hit me" removes 1 to 5. Win: exactly 1000. With
   [known value](find-known-value.md): `scan_first(valueType="int32", comparison="exact", value="100")`, "Hit me",
-  `scan_next(comparison="exact", value="<new value>")` until one address remains, then with consent
+  `scan_next(comparison="exact", value="<new value>")` until one address remains, then
   `memory_write(address="<address>", valueType="int32", value="1000")`.
 - gtutorial level 2: you have 100 health (shown as a number), two enemies have 200; your shots do 1, theirs 2. When
   one enemy dies the other heals 20 and homing bombs follow that deal your health plus 1, so freezing your health
@@ -69,7 +69,7 @@ condition and the workflow to follow; use its part for {tutorial}.
 - tutorial (password 419482): int32 health 0 to 499, shown only as a bar; each loss shows briefly. Win: exactly 5000.
   With [unknown value](find-unknown-value.md): `scan_first(valueType="int32", comparison="unknown")`, "Hit me",
   `scan_next(comparison="decreasedBy", value="<loss>")` or `scan_next(comparison="decreased")`, repeat, then write
-  5000 with consent. Below 0 the value restarts at random: `scan_reset()` and scan again.
+  5000. Below 0 the value restarts at random: `scan_reset()` and scan again.
 - gtutorial level 3: landing on the 12 red platforms from above turns them green; then the door (bottom right)
   unlocks, the enemies barricade it, and touching an enemy kills and restarts the level. Routes, combinable: the green
   count (int32, [known value](find-known-value.md)); the player's float x and y (-1 to 1, y grows downward) with
@@ -105,7 +105,7 @@ condition and the workflow to follow; use its part for {tutorial}.
   new block, waits 3 s (the window does not respond), then checks. Win: 5000 in the new block. Find the value, run
   [find what writes](find-writer.md) and click "Change value" (`mov [rdx],eax` at +49B8C: offset 0, RDX holds the
   block), then the [manual chain](manual-pointer-chain.md) to the static `"Tutorial-x86_64.exe"+346C70`. Before
-  "Change pointer", with consent:
+  "Change pointer":
   `record_create(records=[{description="Step 6 health", address="<static>", value="5000", variableType=2, offsets=["0"]}])`
   (its `currentAddress` must be the value's address), then `record_set_active(ids=[<id>], active=true)`
   ([freeze](freeze-value.md)): `active` must read true; otherwise, unless `pending`, `failure` gives the reason.

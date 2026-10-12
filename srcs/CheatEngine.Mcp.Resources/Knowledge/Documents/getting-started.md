@@ -1,7 +1,7 @@
 # Getting started
 
 Start here: this page is the entry point of the knowledge base. It covers what the server is, the first calls of a
-session, the settings that switch features, which document to read for which task, what consent means and how to
+session, the settings that switch features, which document to read for which task, how to
 leave Cheat Engine (CE) clean. The rules for every session and the index of guided workflows are in
 [workflows](workflows.md).
 
@@ -30,11 +30,10 @@ leave Cheat Engine (CE) clean. The rules for every session and the index of guid
 3. `runtime_get_overview()`: `process` says whether a target is selected (`isOpen`), and `runtime.gates` repeats the
    switches. A `resourceCount` or `jobCount` above zero means earlier work may still be live: read
    `runtime_list_resources()` and `runtime_list_jobs()` first, and release nothing unasked.
-4. Ask which program to use, whether it is single-player or offline, and whether it has anti-cheat. Stop at online,
-   competitive or protected games.
+4. Ask which program to use.
 5. `process_list(nameContains="tutorial")`: `processes` gives `processId` and `processName`; `truncated` true means
    narrow the filter. When a launcher and the game both match, let the user choose.
-6. With consent, `process_attach(process="<processId>")`: a process id (preferred) or an exact executable name.
+6. `process_attach(process="<processId>")`: a process id (preferred) or an exact executable name.
    - Attaching by id to the process already selected changes nothing.
    - Any other attach is refused with `busy` while MCP holds state that a switch would strand: a patch, allocation,
      named scanner, registered symbol, breakpoint, running job, a speed other than 1, MCP's pause or a Mono
@@ -96,7 +95,7 @@ calling the tools it covers.
 | Document | Read it when |
 |---|---|
 | [workflows](workflows.md) | before target work: session rules (ids, paging, scanners, jobs, target switches, errors) and the prompt index |
-| [safety](safety.md) | before the first change: allowed targets, consent, backups, what the switches stop, what MCP tracks and undoes |
+| [safety](safety.md) | before the first change: backups, what the switches stop, what MCP tracks and undoes |
 | [glossary](glossary.md) | a term or result field is unfamiliar, such as AOB, code cave, pointer chain, host effect or job |
 | [tool-map](tool-map.md) | you need the tool for a task, with the switch it needs and its dispatch class |
 | [errors-and-recovery](errors-and-recovery.md) | a call failed: its kind, host effect and next step, and releasing or acknowledging resources |
@@ -181,17 +180,9 @@ calling the tools it covers.
   yields `invalid_state`; refresh explicitly. These resource reads reuse bounded copies and do not enumerate
   the native lists.
 
-## Responsible use and consent
+## Session rules
 
-- Work only on software the user owns or may modify: their own programs, single-player or offline games, CE's
-  tutorials. Attach only to the process the user named.
-- Never online, multiplayer or competitive play, never a game with anti-cheat (it can detect CE and ban the account),
-  and never help bypass anti-cheat, DRM or licence checks. Stop when unsure.
-- Consent in practice: before a memory write or protection change, a patch, an Auto Assembler or Lua script,
-  activating or freezing a record, a debugger attach, a speedhack, a Mono attach, code run in the target, a kernel
-  feature, a table load, a process launch or a file write, tell the user what changes, where, the risk (a crash, lost
-  progress) and how to undo it, then wait for an explicit yes. A yes covers the change described, not the session.
-  Suggest saving game progress first.
+- Attach only to the process the user named.
 - A failure sets `isError` and returns `error.kind`, `error.hostEffect`, `error.retryable` and `error.hint`. When
   `retryable` is true, repeat the identical call once, later. `not_started` or `not_applied` means nothing changed:
   fix the cause, then call again. After `completed`, verify with a read. Never repeat a mutation after a `timeout` or
@@ -211,8 +202,7 @@ calling the tools it covers.
 - It stops at the first release that does not complete, keeps the older resources and fails with `partial_effect`:
   follow the hint, never repeat blindly. Entries of an earlier plugin activation (`orphaned`) need
   `runtime_release_resources(includeOrphans=true)`. `runtime_release_resources(acknowledgeIds=["<id>"])` forgets an
-  entry the user recovered by hand and then releases everything else too, so use it only at the end of cleanup, with
-  consent, never to drop one leftover mid-session.
+  entry the user recovered by hand and then releases everything else too, so use it only at the end of cleanup, never to drop one leftover mid-session.
 - It does not undo `memory_write` or `memory_set_protection` changes, records and freezes, structures, main scan
   results, a loaded table, a pause the user made or a debugger attachment: cleanup_session handles those. Snapshots,
   pointer maps and pointer scans are MCP memory, not resources: delete them with `memory_delete_snapshot`,

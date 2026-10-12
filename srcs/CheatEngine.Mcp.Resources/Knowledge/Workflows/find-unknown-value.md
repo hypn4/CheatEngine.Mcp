@@ -3,8 +3,7 @@
 ## Goal
 
 Find a value the game does not show as a number (a bar, a hidden stat), scan type `{valueType}` (`auto`: you
-choose), described as `{description}`. Only on single-player or offline software the user may modify; each test
-write and record needs the user's consent.
+choose), described as `{description}`.  
 
 ## Steps
 
@@ -27,11 +26,10 @@ write and record needs the user's consent.
 8. Ask the user to change the value during the next few seconds, then
    `memory_read_samples(addresses=["<a1>", "<a2>"], valueType="<type>", intervalMs=100, durationMs=5000)`: keep the
    series whose `changes` follow the action (a constant has `distinctCount` 1).
-9. With consent, test one candidate at a time:
+9. test one candidate at a time:
    `memory_write(address="<a1>", valueType="<type>", value="<test value>")`, keep `previous`, ask whether the bar
    moved, and restore unless wanted: `memory_write(address="<a1>", valueType="bytes", value="<previous>")`.
-10. With consent,
-    `record_create(records=[{description="{description}", address="<address>", variableType=4}])` with 2 for int32,
+10. `record_create(records=[{description="{description}", address="<address>", variableType=4}])` with 2 for int32,
     4 for float or 5 for double; with no `value`, nothing is written. Keep the record id.
 
 ## Decisions

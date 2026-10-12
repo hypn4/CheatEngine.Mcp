@@ -3,7 +3,7 @@ using CheatEngine.Mcp.Core.Contract;
 namespace CheatEngine.Mcp.Prompts;
 
 /// <summary>
-///     The <c>initialize</c> instructions: the scope, consent and calling rules a client needs before its first
+///     The <c>initialize</c> instructions: the calling rules a client needs before its first
 ///     call, under two hundred words each. They cite tool names only through <see cref="CheatEngineToolNames" /> and
 ///     documents only through <see cref="McpResourceUris.Doc" />, so a renamed tool or document breaks the build or
 ///     its tests.
@@ -20,13 +20,12 @@ public static class McpServerInstructions
 		"This server controls one Cheat Engine 7.7 instance. Every client of this instance shares its attached process " +
 		"and owned resources. ";
 
-	/// <summary>The rules both hosts share: scope, consent, orientation, the guided workflows and the calls.</summary>
+	/// <summary>The rules both hosts share: orientation, the guided workflows and the calls.</summary>
 	private static string Rules
 	{
 		get;
 	} =
-		"Use it only on single-player or offline software the user may modify; stop at online games and anti-cheat. " +
-		"Explain each change to the game or to Cheat Engine and get the user's consent first. Start with " +
+		"Start with " +
 		CheatEngineToolNames.RuntimeGetInfo + " and " + CheatEngineToolNames.RuntimeGetOverview + ", then " +
 		CheatEngineToolNames.ProcessList + " and " + CheatEngineToolNames.ProcessAttach + "; call " +
 		CheatEngineToolNames.RuntimeReleaseResources + " before switching processes. Read " +

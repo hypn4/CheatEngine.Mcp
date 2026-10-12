@@ -22,8 +22,8 @@ what, if anything, changed, and agree one safe next step with the user. Never re
    - pointer maps and scans: `pointer_list_maps()`, `pointer_list_scans()`;
    - jobs and owned state: `runtime_list_jobs()`, `runtime_list_resources()`;
    - gateway: `instance_list()`.
-4. Tell the user what failed, what the checks show changed, and the next step. Repeat the call at most once, with
-   consent for a change, and only when `retryable` is true or nothing changed and the cause is fixed.
+4. Tell the user what failed, what the checks show changed, and the next step. Repeat the call at most once,
+   only when `retryable` is true or nothing changed and the cause is fixed.
 
 ## Decisions
 
@@ -44,7 +44,7 @@ change (deactivate it first), a name in use, a record id from before the last ta
 a changed CE runtime (disable and re-enable the plugin). For a `mono_` tool: Cheat Engine's Mono timeout dialog is open
 (the user answers it), or the collector pipe failed. Follow the hint: repeat once when it says the next call reconnects;
 otherwise `mono_detach()`, and when `mono_detach` reports `not_found` or `mono_detach.alreadyEnded` true, Cheat Engine
-owns the attachment and the user re-activates Mono in its Mono menu; attach again only with consent. Read the state,
+owns the attachment and the user re-activates Mono in its Mono menu. Read the state,
 fix the precondition with the user, then call again once.
 
 ### kind: not_found
@@ -61,7 +61,7 @@ unless its start call set one; 300 s at most); a lost job is started again.
 No process is selected; for a `mono_` tool, Cheat Engine's Mono collector is not attached to it, or Cheat Engine
 aborted its connection (follow the hint: when `mono_detach` reports `not_found` or `mono_detach.alreadyEnded` true, the
 user re-activates Mono in Cheat Engine's Mono menu); for a `dotnet_` tool, the .NET data collector is unavailable.
-Check `process_get_current()`, `mono_get_status()` or `dotnet_get_status()`. Attaching is a consented step:
+Check `process_get_current()`, `mono_get_status()` or `dotnet_get_status()`. Attaching changes the target:
 [attach and orient](attach-and-orient.md) or [Unity (Mono) recon](unity-mono-recon.md).
 
 ### kind: busy
@@ -69,7 +69,7 @@ Check `process_get_current()`, `mono_get_status()` or `dotnet_get_status()`. Att
 Something competes: the concurrent dispatch limit (`Mcp:Execution:MaxConcurrentDispatches`, 4 by default), the job
 limit (`Mcp:Execution:MaxJobs`, 16), a running main scan, a snapshot or rescan in progress, a game paused or stopped at
 a breakpoint (code calls, .NET reads), or owned resources that block a target change (orphans included) or
-`debugger_detach` (the error names them). Wait for the running work, or with consent stop it
+`debugger_detach` (the error names them). Wait for the running work, or stop it
 (`scan_stop(scannerName="main")`, `runtime_stop_job(jobId="...")`) or [clean up](cleanup-session.md), then repeat once.
 
 ### kind: timeout
@@ -129,7 +129,7 @@ names the broken hop. Re-find the address, perhaps with a [pointer scan](pointer
 
 A write was rejected; the host effect says whether any byte changed. Check `memory_get_address_info.region`
 protection and read the bytes back with `memory_read(address="<address>", valueType="bytes", size=16)`. Change
-protection with `memory_set_protection` only with consent, and restore its `previous` access afterwards. A batch
+protection with `memory_set_protection`, and restore its `previous` access afterwards. A batch
 reports `details.completed` and `details.failedIndex`.
 
 ### kind: limit_exceeded
@@ -143,7 +143,7 @@ delete unused ones.
 Some steps applied, never a success. `details` says which: completed items, `failedIndex`, created and rolled-back
 records, or a release with `isRetryable` and `requiresManualRecovery`; `runtime_release_resources` lists `released`,
 `failed` and `remaining`. Repeat once only when retryable. Otherwise report what applied, inspect, then finish or undo
-explicitly with consent. A leftover the user recovers by hand stays listed until the end of
+explicitly. A leftover the user recovers by hand stays listed until the end of
 [cleanup](cleanup-session.md): `runtime_release_resources(acknowledgeIds=["<id>"])` also releases everything else.
 
 ### kind: stopping

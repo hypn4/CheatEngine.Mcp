@@ -14,7 +14,7 @@ in the table at `{tablePath}` when given, else in the loaded table, and save the
    `record_get(ids=[<id>])`: `script`, `address`, `offsets`, `currentAddress`, `active`.
 3. `module_get(module="<module in the script>")`: a `pe.timeDateStamp` other than one noted in the script or its
    group confirms a new build.
-4. Unpatch the site, with consent: deactivate the record (`record_set_active(ids=[<id>], active=false)`), then
+4. Unpatch the site deactivate the record (`record_set_active(ids=[<id>], active=false)`), then
    release an MCP patch on it (`asm_list_patches()`, `asm_release_patch(patchId="<patchId>")`).
 5. For each `aobscanmodule` pattern, mask displacement and immediate bytes with `??` for a relaxed copy, then
    `aob_find(patterns=["<old pattern>", "<relaxed pattern>"], module="<module>", executable="required", limit=2)`.
@@ -28,7 +28,7 @@ in the table at `{tablePath}` when given, else in the loaded table, and save the
    field offsets (`[rsi+780]` may now be `[rsi+788]`), and a comment with the new build stamp. Then
    `asm_check(script="<script>")` until `accepted` (see `failedSection`; `[DISABLE]` needs bare `symbol:` lines,
    not `symbol+N`, and none under `{$STRICT}`).
-9. With consent, `record_set_script(id=<id>, script="<script>")`.
+9. `record_set_script(id=<id>, script="<script>")`.
 10. Test after the user saves the game: `record_set_active(ids=[<id>], active=true)` (`active` false: `failure.reason`
     such as `aob_not_found` says why), check the game and `code_disassemble(address="<symbol>", count=3)`; then
     `record_set_active(ids=[<id>], active=false)`: `module_find_patches(module="<module>")` shows no range at the
@@ -36,7 +36,7 @@ in the table at `{tablePath}` when given, else in the loaded table, and save the
 11. Pointer record, wrong `currentAddress`: show its `address` and `offsets` (hex, base first);
     `pointer_read_chain(base="<address>", offsets=["10", "4C8"])` shows each hop. Often one field offset shifted (the
     writer now uses `[rsi+4D0]`): check
-    `pointer_read_chain(base="<address>", offsets=["10", "4D0"], valueType="float")`, then with consent
+    `pointer_read_chain(base="<address>", offsets=["10", "4D0"], valueType="float")`, then
     `record_update(updates=[{id=<id>, offsets=["10", "4D0"]}])`. Dead base: a [pointer scan](pointer-scan.md).
 12. `table_save(path="<new .CT under a table root>", overwrite=false)`; keep the old table until the user confirms.
 

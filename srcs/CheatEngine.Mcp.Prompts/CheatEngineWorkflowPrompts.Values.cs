@@ -87,7 +87,7 @@ public sealed partial class CheatEngineWorkflowPrompts
 
 	/// <summary>Find coordinates and teleport.</summary>
 	[McpServerPrompt(Name = "find_position", Title = "Find coordinates and teleport")]
-	[Description("Coordinates to save, restore or teleport in a single-player game: unknown scans while the user moves "
+	[Description("Coordinates to save, restore or teleport in a game: unknown scans while the user moves "
 				 + "along one axis, then the neighbouring axes and a verified write.")]
 	public static GetPromptResult FindPositionPrompt(
 		[Display(Name = "Coordinate type")]
@@ -128,7 +128,7 @@ public sealed partial class CheatEngineWorkflowPrompts
 	/// <summary>Find and edit text in memory.</summary>
 	[McpServerPrompt(Name = "find_text", Title = "Find and edit text in memory")]
 	[Description("Text in memory such as a player name or a dialogue buffer: UTF-8 and UTF-16 byte searches, its "
-				 + "container and owner, and an in-place edit with consent.")]
+				 + "container and owner, and an in-place edit.")]
 	public static GetPromptResult FindTextPrompt(
 		[Display(Name = "Text")]
 		[Description("The exact text, case preserved, such as the player's name.")]

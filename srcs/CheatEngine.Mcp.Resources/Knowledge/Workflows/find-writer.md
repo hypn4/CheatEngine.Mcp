@@ -3,7 +3,7 @@
 ## Goal
 
 List the instructions that write (`{trigger}` = `write`, the default) or read and write (`access`) the `{size}`-byte
-value at `{address}` (1, 2, 4 or 8; default 4). Never on online or anti-cheat-protected games.
+value at `{address}` (1, 2, 4 or 8; default 4). 
 
 ## Steps
 
@@ -11,11 +11,11 @@ value at `{address}` (1, 2, 4 or 8; default 4). Never on online or anti-cheat-pr
    region the heap. The address must be a multiple of `{size}`; 8 needs a 64-bit target (`pointerSize` 8 in
    `process_get_current()`).
 2. `debugger_get_status()`. Attached and `broken`: `debugger_continue()`, since a capture starts only while the target
-   runs. Not attached: explain that it can freeze or crash the game, get consent, then
+   runs. Not attached: it can freeze or crash the game;
    `debugger_attach(interface="windows")` (or `"default"`, CE's own setting); read `activeInterface`.
 3. `debugger_list_breakpoints()`: the capture needs one of the four hardware slots (DR0-DR3), shared with the user's
    breakpoints and other jobs; when all are used the start is refused: ask which to free.
-4. Explain the capture, get consent, start it and keep `jobId`:
+4. Explain the capture, start it and keep `jobId`:
    `debugger_start_capture(address="{address}", trigger="{trigger}", size={size}, aggregateByInstruction=true)`.
 5. Ask the user to change the value in the game (for `access`, play a few seconds).
 6. `debugger_poll_capture(jobId=..., afterSequence=0)`, passing back `nextAfterSequence` while `more` is true. Each

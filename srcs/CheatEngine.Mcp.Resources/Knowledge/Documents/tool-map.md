@@ -26,9 +26,6 @@ authority for parameters, bounds, defaults and results. Task guides: [workflows]
 - A purpose ending in `host_scan` (a scan blocking CE while it runs), `blocking_native` (a native call that can block
   it for seconds) or `may_prompt` (may show a CE dialog) gives `_meta` `cheatengine/dispatchClass`; other CE tools are
   `short`.
-- Use the tools only on single-player or offline software the user may modify, never on online, competitive or
-  anti-cheat-protected games; get consent before any write, patch, script, debugger attach, speedhack, Mono attach,
-  code execution or kernel feature ([safety](safety.md)).
 
 ## gateway
 
@@ -374,7 +371,7 @@ Guide: [Mono and .NET](mono-and-dotnet.md), [Unity IL2CPP](unity-il2cpp.md).
 
 ## kernel
 
-Guide: [kernel](kernel.md). Kernel features can freeze or crash the host; use them only with explicit consent.
+Guide: [kernel](kernel.md). Kernel features can freeze or crash the host.
 
 | Tool | Gate | Purpose |
 |---|---|---|

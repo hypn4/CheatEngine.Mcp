@@ -155,7 +155,7 @@ Object-level patterns on x64 (heuristics: confirm each in game):
 Shared code (one instruction serving the player and enemies) needs a field that says whose object it is
 ([shared_code_filter](../Workflows/shared-code-filter.md)).
 
-1. Collect bases. After consent to attach the debugger,
+1. Collect bases. Attach the debugger,
    `debugger_start_capture(address="<shared instruction>", trigger="execute", groupByEffectiveAddress=true)`, play,
    then `debugger_poll_capture(jobId=..., afterSequence=0)`: each item is one accessed address, `effectiveAddress`,
    with its `hitCount`, so a base is `effectiveAddress` minus the displacement (4C8 for `[rbx+4C8]`). This is CE's
@@ -244,9 +244,7 @@ Shared code (one instruction serving the player and enemies) needs a field that 
 - Game updates move fields: re-verify key offsets before trusting a saved layout
   ([repair_after_update](../Workflows/repair-after-update.md)).
 
-Reading and naming change nothing in the game. `structure_write_element` and filters built on a discriminator do: only
-on single-player or offline software the user owns or may modify, never on online, competitive or anti-cheat-protected
-games, and only after explaining each change ([safety](safety.md)).
+Reading and naming change nothing in the game. `structure_write_element` and filters built on a discriminator do.
 
 ## Sources
 

@@ -6,7 +6,7 @@
       "uri": "cheatengine://docs/address-expressions",
       "description": "Where Cheat Engine address expressions are accepted, their grammar and pointer notations, and the strict number formats some parameters and outputs use instead.",
       "mimeType": "text/markdown",
-      "size": 16924
+      "size": 16841
     },
     {
       "name": "doc_aob_signatures",
@@ -14,7 +14,7 @@
       "uri": "cheatengine://docs/aob-signatures",
       "description": "Byte patterns that survive updates: wildcard and masking rules, generating and proving signatures, finding a value\u0027s exact bytes, injection scaffolds and repair after an update.",
       "mimeType": "text/markdown",
-      "size": 22515
+      "size": 22213
     },
     {
       "name": "doc_auto_assembler",
@@ -22,7 +22,7 @@
       "uri": "cheatengine://docs/auto-assembler",
       "description": "Auto Assembler syntax, commands and directives, how scripts are classified against the gates, what asm_check proves, the AOB injection scaffold, code patches, nearby allocation and the check-apply-verify-release cycle.",
       "mimeType": "text/markdown",
-      "size": 24884
+      "size": 24563
     },
     {
       "name": "doc_ce_tutorial",
@@ -30,7 +30,7 @@
       "uri": "cheatengine://docs/ce-tutorial",
       "description": "The tutorial\u0027s steps and gtutorial\u0027s levels mapped to techniques, workflows and tools, with the step passwords, addresses verified on the CE 7.7 builds and a safe smoke test for a new setup.",
       "mimeType": "text/markdown",
-      "size": 23756
+      "size": 23278
     },
     {
       "name": "doc_cheat_recipes",
@@ -38,7 +38,7 @@
       "uri": "cheatengine://docs/cheat-recipes",
       "description": "For each common cheat goal: where games usually store the value, the data and code routes, how to verify the result, the robust form and the scope limits.",
       "mimeType": "text/markdown",
-      "size": 20688
+      "size": 20235
     },
     {
       "name": "doc_cheat_tables",
@@ -46,7 +46,7 @@
       "uri": "cheatengine://docs/cheat-tables",
       "description": "Address-list records: types, writing-safe creation, pointer chains and \u002Boffset fields, freezing, script records, groups and deletes, loading and saving cheat tables with their switch checks, and robust tables.",
       "mimeType": "text/markdown",
-      "size": 24350
+      "size": 24129
     },
     {
       "name": "doc_code_analysis",
@@ -54,7 +54,7 @@
       "uri": "cheatengine://docs/code-analysis",
       "description": "Reading disassembly, function graphs, dissector references and strings, imports and RIP-relative globals to learn what a value means, where its base comes from and where to patch.",
       "mimeType": "text/markdown",
-      "size": 24385
+      "size": 24131
     },
     {
       "name": "doc_configuration",
@@ -62,7 +62,7 @@
       "uri": "cheatengine://docs/configuration",
       "description": "Every plugin and gateway setting with its default and bounds: precedence, the capability gates and what each refuses, execution limits, file and table roots, environment variables and log files.",
       "mimeType": "text/markdown",
-      "size": 22923
+      "size": 22020
     },
     {
       "name": "doc_connection_troubleshooting",
@@ -70,7 +70,7 @@
       "uri": "cheatengine://docs/connection-troubleshooting",
       "description": "Plugin, gateway and AI-client setup, and what to check when instance_list is empty, an instance is unavailable, or a call times out, is busy or is refused by a setting.",
       "mimeType": "text/markdown",
-      "size": 24299
+      "size": 24031
     },
     {
       "name": "doc_debugger",
@@ -78,7 +78,7 @@
       "uri": "cheatengine://docs/debugger",
       "description": "Debugger interfaces and gates, the four breakpoint slots and methods, find-what-writes captures and data-hit heuristics, traces, registers and stepping, and how to leave the target running.",
       "mimeType": "text/markdown",
-      "size": 24415
+      "size": 24172
     },
     {
       "name": "doc_emulators",
@@ -86,7 +86,7 @@
       "uri": "cheatengine://docs/emulators",
       "description": "Emulated consoles: finding the guest RAM base, letting Cheat Engine scan mapped memory, big-endian search, read and write, guest versus host addresses and pointers, per-emulator notes and dynarec pitfalls.",
       "mimeType": "text/markdown",
-      "size": 17732
+      "size": 17469
     },
     {
       "name": "doc_errors_and_recovery",
@@ -94,7 +94,7 @@
       "uri": "cheatengine://docs/errors-and-recovery",
       "description": "The error envelope and resource error codes, every failure kind and host effect with its next step, timeouts, stale ids, and releasing or acknowledging owned resources without repeating a side effect.",
       "mimeType": "text/markdown",
-      "size": 24739
+      "size": 24644
     },
     {
       "name": "doc_game_engines",
@@ -102,15 +102,15 @@
       "uri": "cheatengine://docs/game-engines",
       "description": "How to identify a game\u0027s engine or runtime and predict how it stores values, with per-engine notes and the cases that are out of scope.",
       "mimeType": "text/markdown",
-      "size": 21890
+      "size": 21287
     },
     {
       "name": "doc_getting_started",
       "title": "Getting started",
       "uri": "cheatengine://docs/getting-started",
-      "description": "Start here when new: what the plugin and gateway are, the first calls of a session, the settings that gate features, where the docs and prompts live, scope and consent, and how to release what MCP holds.",
+      "description": "Start here when new: what the plugin and gateway are, the first calls of a session, the settings that gate features, where the docs and prompts live, and how to release what MCP holds.",
       "mimeType": "text/markdown",
-      "size": 18388
+      "size": 17362
     },
     {
       "name": "doc_glossary",
@@ -118,7 +118,7 @@
       "uri": "cheatengine://docs/glossary",
       "description": "Short definitions of Cheat Engine and MCP terms, such as AOB, code cave, pointer chain, host effect and job, each with the tool or workflow that uses it.",
       "mimeType": "text/markdown",
-      "size": 21752
+      "size": 21600
     },
     {
       "name": "doc_kernel",
@@ -126,7 +126,7 @@
       "uri": "cheatengine://docs/kernel",
       "description": "The DBK driver and DBVM hypervisor tools: why they are usually unavailable, the kernel access switch and its gaps, loading DBVM, physical memory, page watches, hazards and recovery.",
       "mimeType": "text/markdown",
-      "size": 20314
+      "size": 19650
     },
     {
       "name": "doc_lua",
@@ -134,7 +134,7 @@
       "uri": "cheatengine://docs/lua",
       "description": "Dedicated tools versus lua_execute: how a chunk runs and fails, how return values map to JSON, main-thread and shared-state rules, why Lua must never bypass a gate, and searching celua.txt with lua_find_api.",
       "mimeType": "text/markdown",
-      "size": 20365
+      "size": 19832
     },
     {
       "name": "doc_lua_api",
@@ -142,7 +142,7 @@
       "uri": "cheatengine://docs/lua-api",
       "description": "Cheat Engine 7.7 Lua functions by area for lua_execute chunks: celua.txt signatures, danger tags, source-checked traps (offset order, breakpoint callback returns, readString bytes), the tool to prefer and what to avoid.",
       "mimeType": "text/markdown",
-      "size": 24827
+      "size": 24592
     },
     {
       "name": "doc_memory_model",
@@ -150,7 +150,7 @@
       "uri": "cheatengine://docs/memory-model",
       "description": "Regions, protections, module sections, heaps, stacks and what static means in a Windows process; why a read fails, how to change protection safely, and which tool answers which question about an address.",
       "mimeType": "text/markdown",
-      "size": 20927
+      "size": 20607
     },
     {
       "name": "doc_mono_and_dotnet",
@@ -158,7 +158,7 @@
       "uri": "cheatengine://docs/mono-and-dotnet",
       "description": "Choosing between the Mono and .NET collectors, what mono_attach and the Uses Mono option change, reading classes, fields, statics, instances and methods, and invoking or injecting managed code safely.",
       "mimeType": "text/markdown",
-      "size": 25774
+      "size": 25430
     },
     {
       "name": "doc_pointers",
@@ -166,15 +166,15 @@
       "uri": "cheatengine://docs/pointers",
       "description": "Pointer notation and offset order, reading a chain, manual chains from a writer, pointer maps, path searches, rescans and their limits, ranking chains, storing them in records, and fallbacks.",
       "mimeType": "text/markdown",
-      "size": 29048
+      "size": 28775
     },
     {
       "name": "doc_safety",
-      "title": "Safety and responsible use",
+      "title": "Safety",
       "uri": "cheatengine://docs/safety",
-      "description": "Read before the first change: allowed targets, consent, backups, what the four gates do and do not stop, what MCP tracks and how to undo the rest, and the DBK/DBVM and Windows-protection rules.",
+      "description": "Read before the first change: backups, what the four gates do and do not stop, what MCP tracks and how to undo the rest, and the DBK/DBVM and Windows-protection rules.",
       "mimeType": "text/markdown",
-      "size": 22469
+      "size": 19679
     },
     {
       "name": "doc_speedhack",
@@ -182,7 +182,7 @@
       "uri": "cheatengine://docs/speedhack",
       "description": "How the speedhack hooks a game\u0027s clocks, its lasting host effects and how to restore normal speed.",
       "mimeType": "text/markdown",
-      "size": 22189
+      "size": 21390
     },
     {
       "name": "doc_structures",
@@ -190,7 +190,7 @@
       "uri": "cheatengine://docs/structures",
       "description": "Structure layouts: finding and identifying a base (RTTI), .NET, Mono, PDB and autoguess sources, reading and retyping fields, recognising common data, comparing instances, rename, C header export and cleanup.",
       "mimeType": "text/markdown",
-      "size": 22920
+      "size": 22695
     },
     {
       "name": "doc_tool_map",
@@ -198,7 +198,7 @@
       "uri": "cheatengine://docs/tool-map",
       "description": "Every tool by domain with its purpose, the setting (gate) it needs and its dispatch class; the running schema stays the authority for parameters and results.",
       "mimeType": "text/markdown",
-      "size": 26065
+      "size": 25727
     },
     {
       "name": "doc_troubleshooting_scans",
@@ -206,7 +206,7 @@
       "uri": "cheatengine://docs/troubleshooting-scans",
       "description": "What to try when a value scan finds nothing or too much, or finds a value that reverts, will not freeze or moves: the Cheat Engine settings main inherits, emulator mapped memory and scan refusals.",
       "mimeType": "text/markdown",
-      "size": 18061
+      "size": 17666
     },
     {
       "name": "doc_unity_il2cpp",
@@ -214,7 +214,7 @@
       "uri": "cheatengine://docs/unity-il2cpp",
       "description": "Detecting IL2CPP, what CE\u0027s collector offers there and its host effects, method addresses, object and class layouts, statics, instance scans, offline dump offsets and when to stop.",
       "mimeType": "text/markdown",
-      "size": 19230
+      "size": 19039
     },
     {
       "name": "doc_unreal_engine",
@@ -222,7 +222,7 @@
       "uri": "cheatengine://docs/unreal-engine",
       "description": "Unreal Engine 4 and 5: version detection, UE5 doubles, UObject, FName and object-array layouts, and tool recipes that find the name pool, GUObjectArray and GWorld; every offset is unverified per build.",
       "mimeType": "text/markdown",
-      "size": 15784
+      "size": 15473
     },
     {
       "name": "doc_value_scans",
@@ -230,7 +230,7 @@
       "uri": "cheatengine://docs/value-scans",
       "description": "Main versus named scanners, first and next scan comparisons, float precision and rounding, signed compares, narrowing, snapshots and sampling, one-shot value search, and verifying candidates.",
       "mimeType": "text/markdown",
-      "size": 24770
+      "size": 24506
     },
     {
       "name": "doc_value_types",
@@ -238,7 +238,7 @@
       "uri": "cheatengine://docs/value-types",
       "description": "How the scan, memory and record type vocabularies map, and how games store integers, floats, booleans, pointers, tagged engine values, strings and big-endian emulator data in memory.",
       "mimeType": "text/markdown",
-      "size": 22061
+      "size": 21598
     },
     {
       "name": "doc_workflows",
@@ -246,7 +246,7 @@
       "uri": "cheatengine://docs/workflows",
       "description": "Read first: scope, session start, ids, scanners, jobs, cleanup, gates, errors, live resources and the index of guided workflows.",
       "mimeType": "text/markdown",
-      "size": 26983
+      "size": 26494
     },
     {
       "name": "doc_x64_injection",
@@ -254,7 +254,7 @@
       "uri": "cheatengine://docs/x64-injection",
       "description": "Registers, calling convention, flags, SSE floats, jcc encodings and same-length branch patches, jump sizes and nearby allocation, RIP-relative operands and whole-instruction patching for code injected into a game\u0027s function.",
       "mimeType": "text/markdown",
-      "size": 24528
+      "size": 24282
     },
     {
       "name": "instances",

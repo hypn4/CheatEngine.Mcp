@@ -3,7 +3,7 @@
 Cheat Engine 7.7 embeds Lua 5.3 with its own API, documented in `celua.txt`. CheatEngine.Mcp uses Lua in two very
 different ways: reviewed scripts inside the tools, and your own chunks sent through `lua_execute`. Read this page before
 you write any Lua. The API itself is in the [Lua API cheat sheet](lua-api.md); the step-by-step procedure (check, draft,
-get consent, run, report) is the [write_lua_script workflow](../Workflows/write-lua-script.md).
+run, report) is the [write_lua_script workflow](../Workflows/write-lua-script.md).
 
 ## Dedicated tools versus `lua_execute`
 
@@ -27,8 +27,7 @@ Choose in this order:
 1. A dedicated tool: look it up in the [tool map](tool-map.md). It validates arguments, bounds its time on CE's main
    thread, reports `hostEffect` and registers the resources it leaves behind.
 2. Several tools in sequence, for example `symbol_resolve` and then `memory_read_batch`.
-3. `lua_execute`, only for a documented CE feature that no tool covers. Tell the user so, show the source and get
-   consent before running it.
+3. `lua_execute`, only for a documented CE feature that no tool covers.
 
 ## How `lua_execute` runs a chunk
 
@@ -125,11 +124,7 @@ tools, so keeping them is your job:
   unknown name through CE 7.7's `autorun/luasymbols.lua`) in every tool that takes an address, read-only ones included
   ([Lua inside expressions](address-expressions.md#lua-inside-expressions)). Read a record's script before activating
   it, and keep Lua out of addresses.
-- Show the full source and say what it reads and changes. Get the user's consent before any chunk that writes target
-  memory, changes CE or the host, touches files or runs code in the target. Show a read-only probe too.
-- Use it only on single-player or offline software that the user owns or may modify. Never use it on online or
-  competitive games or on titles protected by anti-cheat. Never write Lua for anti-cheat bypass, DRM or licence
-  cracking, or detection evasion ([safety](safety.md)).
+- Show the full source and say what it reads and changes. Show a read-only probe too.
 - Never read the MCP instance registry or its access tokens, CE's settings files, or user files unrelated to the task.
 - Never call `resetLuaState`, `closeCE` or `loadPlugin`. `resetLuaState` replaces CE's Lua state, and the plugin then
   refuses every Lua-backed tool until it is disabled and enabled again; `closeCE` closes CE; `loadPlugin` loads a
@@ -229,7 +224,7 @@ An error-safe read that returns one table:
 local ok, result = pcall(function()
   local base = getAddressSafe('game.exe')
   if base == nil then error('game.exe is not loaded') end
-  local value = readInteger(base + 0x1A2B3C)          -- unsigned; readInteger(address, true) is signed
+  local value = readInteger(base + 0x1A2B3C) -- unsigned; readInteger(address, true) is signed
   if value == nil then error('read failed') end
   return { address = string.format('%X', base + 0x1A2B3C), value = value }
 end)
@@ -240,7 +235,7 @@ return { ok = true, data = result }
 A bounded loop that returns a cursor, so long work becomes several short calls:
 
 ```lua
-local first, cap = 0, 256          -- first: the nextIndex of the previous call
+local first, cap = 0, 256 -- first: the nextIndex of the previous call
 local list = getAddressSafe('game.exe+2F4E10')
 if list == nil then return { ok = false, error = 'list base not found' } end
 local step = targetIs64Bit() and 8 or 4

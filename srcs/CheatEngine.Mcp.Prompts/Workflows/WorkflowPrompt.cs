@@ -43,9 +43,8 @@ internal static partial class WorkflowPrompt
 	internal const string Preamble =
 		"This is a CheatEngine.Mcp guided workflow. When the tools take an instanceId (gateway), call " +
 		CheatEngineToolNames.InstanceList + " first, confirm the instance with the user when more than one could " +
-		"match, and pass its instanceId to every other tool; never switch to another instance. Work only on the " +
-		"process the user is entitled to modify, explain every change to the game or to Cheat Engine before making it, " +
-		"and ask for consent. The linked documents give the background.";
+		"match, and pass its instanceId to every other tool; never switch to another instance. " +
+		"The linked documents give the background.";
 
 	/// <summary>The workflow names (kebab case) of the knowledge base, each the body of one prompt.</summary>
 	internal static IEnumerable<string> EmbeddedWorkflows => CheatEngineKnowledge.WorkflowNames;

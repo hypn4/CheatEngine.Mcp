@@ -3,16 +3,12 @@
 Kernel tools reach below Windows through Cheat Engine's DBK driver and DBVM hypervisor: physical memory, control
 registers and physical-page watches. A mistake does not just crash a game: it can freeze or blue-screen the whole
 machine and lose unsaved work in every program. Read this page before any `kernel_*` call. User-mode tools such as
-`memory_read`, `memory_write` and the [debugger](debugger.md) answer almost every single-player question.
+`memory_read`, `memory_write` and the [debugger](debugger.md) answer almost every question.
 
 ## Before any kernel call
 
-- **Scope.** Only single-player or offline software the user owns or may modify. Never online, competitive or
-  anti-cheat-protected games: kernel access is never a way around a protection, whatever the reason given.
-- **Request and risk.** The user asked for kernel access explicitly, understands that the machine can crash, saved all
-  work in every application and closed what they do not need.
-- **Consent per call.** Before each load, write or watch, say what happens, what could break and how to recover, then
-  wait for a yes. See [safety](safety.md). Call `kernel_get_status` first; it loads nothing.
+- **Risk.** The machine can crash: save all work in every application and close what is not needed.
+- **First call.** `kernel_get_status`; it loads nothing.
 - **Not live-tested.** The project's live qualification never calls the kernel tools; only unit tests with simulated CE
   functions cover them. Report what they return and promise nothing more.
 
@@ -116,7 +112,7 @@ target opened through DBK, or a running DBVM.
 
 Rules for the loading mode:
 
-- Get the user's yes in the conversation first. The dialog is CE's second check, not the consent. Write a reason that
+- Write a reason that
   says who asked and why, such as "User asked to watch writes to one physical page".
 - Any failure is `host_refused` with `hostEffect` `unknown`. A declined dialog, a driver that did not load and a CPU
   that cannot run DBVM all end this way; after a declined dialog DBK stays loaded.
@@ -199,7 +195,7 @@ If disabling fails, `runtime_stop_job` returns `partial_effect`, the job reports
 `requiresManualRecovery`, and the watch may stay armed. MCP never retries that cleanup and `runtime_release_resources`
 skips it; only a reboot removes DBVM and its watches. Tell the user. The entry stays listed and blocks a target switch.
 `runtime_release_resources(acknowledgeIds=["<id>"])` makes MCP forget it without disarming anything, and the same call
-then releases every other tracked resource: use it only at the end of cleanup, with the user's consent. See
+then releases every other tracked resource: use it only at the end of cleanup. See
 [errors and recovery](errors-and-recovery.md).
 
 For "what writes this value" in a user-mode target, prefer the debugger's [find a writer](../Workflows/find-writer.md)
@@ -211,8 +207,7 @@ workflow; use a physical watch only when the user explicitly wants one.
   one-in-five chance per processor core offloaded to DBVM of a `CLOCK_WATCHDOG_TIMEOUT` (0x101) blue screen, probably
   counting hyper-threads: with 8 cores only a 16% chance of no crash. Physical writes and the kernel debugger can
   bugcheck the machine too.
-- **Kernel routines with DBVM.** One report (CE issue #3334; the target was anti-cheat-protected, so out of scope here)
-  describes a `CLOCK_WATCHDOG_TIMEOUT` on Windows 10 22H2 when attaching the DBVM-level debugger or writing memory,
+- **Kernel routines with DBVM.** One report (CE issue #3334) describes a `CLOCK_WATCHDOG_TIMEOUT` on Windows 10 22H2 when attaching the DBVM-level debugger or writing memory,
   with DBVM loaded and CE's Extra kernel routines on; the cause is unconfirmed. When DBVM runs with those options on,
   mention it before any memory write, and let the user decide about the options; do not change them yourself.
 - **State that outlives the session.** DBVM stays until a reboot; DBK until it is unloaded or the machine reboots,

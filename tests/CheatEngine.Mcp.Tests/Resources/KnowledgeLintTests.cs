@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -345,6 +346,36 @@ public sealed partial class KnowledgeLintTests
 			$"{WorkflowFile(workflow)} renders {length} characters" +
 			(worst.Length > 0 ? $" with {worst}" : "") +
 			$"; trim the body so the prompt fits {WorkflowPrompt.MaximumRenderedLength}.");
+	}
+
+	/// <summary>Every workflow has consecutive, non-empty numbered steps; a split item starts with inline code.</summary>
+	[Theory]
+	[MemberData(nameof(Workflows))]
+	public void Body_StepsAreConsecutiveAndNonempty(string prompt)
+	{
+		WorkflowDefinition workflow = Definition(prompt);
+		string file = WorkflowFile(workflow);
+		Match section = StepsSection().Match(Read(file));
+		Assert.True(section.Success, $"{file} has no Steps section.");
+		string stepsBody = section.Groups["body"].Value;
+		int excerpts = stepsBody.IndexOf("\n### ", StringComparison.Ordinal);
+		if (excerpts >= 0)
+		{
+			stepsBody = stepsBody[..excerpts];
+		}
+		Match[] steps = NumberedStep().Matches(stepsBody).ToArray();
+		Assert.NotEmpty(steps);
+		int[] numbers = steps.Select(static step => int.Parse(step.Groups["number"].Value,
+			CultureInfo.InvariantCulture)).ToArray();
+		Assert.True(numbers.SequenceEqual(Enumerable.Range(1, steps.Length)),
+			$"{file} has numbered steps {Listing(numbers.Select(static number => number.ToString(CultureInfo.InvariantCulture)))}; " +
+			"number them consecutively from 1.");
+		foreach (Match step in steps.Where(static step => string.IsNullOrWhiteSpace(step.Groups["text"].Value)))
+		{
+			string continuation = step.Groups["continuation"].Value.TrimStart();
+			Assert.True(continuation.StartsWith('`'),
+				$"{file} step {step.Groups["number"].Value} is empty; keep prose on the numbered line, or start a split command with inline code.");
+		}
 	}
 
 	/// <summary>T10: a workflow declares exactly the union of the requirements of the tools its body cites.</summary>
@@ -978,6 +1009,14 @@ public sealed partial class KnowledgeLintTests
 
 	[GeneratedRegex("^## (?<title>.+?)\\s*$", RegexOptions.CultureInvariant | RegexOptions.Multiline)]
 	private static partial Regex SectionHeading();
+
+	[GeneratedRegex(@"^## Steps\s*\r?\n(?<body>.*?)(?=^## )",
+		RegexOptions.CultureInvariant | RegexOptions.Multiline | RegexOptions.Singleline)]
+	private static partial Regex StepsSection();
+
+	[GeneratedRegex(@"^(?<number>\d+)\.(?<text>[^\r\n]*)(?:\r?\n(?<continuation>[ \t]+[^\r\n]+))?",
+		RegexOptions.CultureInvariant | RegexOptions.Multiline)]
+	private static partial Regex NumberedStep();
 
 	[GeneratedRegex(@"^### (?<name>[A-Za-z][A-Za-z0-9]*): (?<value>\S.*)$",
 		RegexOptions.CultureInvariant | RegexOptions.Multiline)]

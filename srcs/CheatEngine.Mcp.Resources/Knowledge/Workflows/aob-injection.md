@@ -22,12 +22,12 @@ injection point; if not given, pick one such as `damageHook`.
    show the user the result.
 6. `asm_check(script="<script>")`: fix and check again until `accepted` is true.
 7. Explain what the script changes, ask the user to save the game and to answer No to any "Nearby allocation error"
-   dialog, then get explicit consent.
+   dialog.
 8. `asm_apply(script="<script>", name="{symbolName}")`: `retained` must be true; keep `patchId`, read `hostWarnings`.
 9. `code_disassemble(address="{instructionAddress}", count=3)`: a 5-byte `jmp` (`E9`) to the new code, then any NOP
    padding. A 14-byte `FF25` jump overwrote unasserted bytes: release at once.
 10. Ask the user to test `{goal}` in game.
-11. Undo: `asm_release_patch(patchId=...)`, `released` true. To keep it as a cheat, release it, then with consent
+11. Undo: `asm_release_patch(patchId=...)`, `released` true. To keep it as a cheat, release it, then
     `record_create(records=[{description="{goal}", address="0", variableType=11, script="<checked script>"}])`;
     keep its `id`; see [build a robust table](build-robust-table.md).
 

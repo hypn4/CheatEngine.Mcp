@@ -38,7 +38,7 @@ its name, its class when known, who points to it, and the workflow to use next. 
    `rttiClass` is the start. On .NET, `dotnet_get_object(address="<object>")` gives the type and fields. On Unity
    (Mono or IL2CPP), when `mono_get_status()` reports `attached`, `mono_get_object(address="{address}")` finds the
    start itself: `className`, the fields and `offsetInObject` (decimal; a field must cover it, else the address lies
-   past that object). It can block Cheat Engine for seconds; attaching needs consent
+   past that object). It can block Cheat Engine for seconds; attaching injects
    ([Unity Mono recon](unity-mono-recon.md)).
 7. Owners: `pointer_find_references(target="{address}", maxOffset=256, limit=20)`. Each `offset` is where
    `{address}` lies inside the object a holder points to; a holder with a `symbol` is a static root, and a heap

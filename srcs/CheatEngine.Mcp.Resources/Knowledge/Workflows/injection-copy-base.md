@@ -10,7 +10,7 @@ path. Choose an instruction that handles only the player; HUD code is a common c
 
 1. `code_disassemble(address="{instructionAddress}", count=4)`: in the first `opcode`, such as `mov eax,[rbx+000004C8]`,
    read the base register (RBX) and the displacement; the `bytes` from there on give `expectedBytes`.
-2. Prove it handles only the player. `debugger_get_status()`; when not attached, ask for consent, then
+2. Prove it handles only the player. `debugger_get_status()`; when not attached,
    `debugger_attach(interface="windows")`.
    `debugger_start_capture(address="{instructionAddress}", trigger="execute", groupByEffectiveAddress=true, lifetimeSeconds=60)`,
    keep `jobId`, let the user play near enemies, then `debugger_poll_capture(jobId=..., afterSequence=0, limit=1000)`
@@ -25,13 +25,13 @@ path. Choose an instruction that handles only the player; HUD code is a common c
    x64); after the cave's `jmp return` add the line `{symbolName}:` then `dq 0` (`dd 0` on x86); add
    `unregistersymbol({symbolName})` to `[DISABLE]`. Change nothing else.
 6. `asm_check(script="<script>")` until `accepted` is true; otherwise read `failedSection` and `hostMessages`.
-7. Explain the change, ask the user to save the game and give consent, then
+7. Ask the user to save the game, then
    `asm_apply(script="<script>", name="copy {symbolName}")`: `retained` must be true; keep `patchId`.
 8. `memory_read(address="{symbolName}", valueType="pointer")`: 0 until the code runs. Ask the user to trigger it
    (move, take damage), then read again; it must equal the captured base.
 9. `pointer_read_chain(base="{symbolName}", offsets=["<field offset>"], valueType="int32")` must show a known value,
    such as the health on screen.
-10. With consent, `record_create(records=[{description="HP", address="[{symbolName}]+<field offset>", variableType=2}])`
+10. `record_create(records=[{description="HP", address="[{symbolName}]+<field offset>", variableType=2}])`
     (variableType 4 for a float); keep each record `id`.
 11. To undo: `asm_release_patch(patchId=...)`, and `record_delete(ids=[<id>])` for records the user does not keep.
 

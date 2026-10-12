@@ -5,9 +5,7 @@ to start, narrow and read a scan, how floats and signed integers compare, and wh
 or a one-shot byte search is the better tool. Types and encodings are in [value types](value-types.md). For scans that
 find nothing, see [when a scan finds nothing](troubleshooting-scans.md). Terms are in the [glossary](glossary.md).
 
-Scans only read the target, but the verification step writes to it. Work only on single-player or offline software
-the user owns or may modify, never on online, competitive or anti-cheat-protected games, and ask before every write
-(see [safety](safety.md)).
+Scans only read the target, but the verification step writes to it.
 
 ## Main and named scanners
 
@@ -133,7 +131,7 @@ Page results with `scan_list_results(scannerName="main", startIndex=0, maximumRe
 ## Known value
 
 1. `process_get_current()` confirms the target. `scan_get_status(scannerName="main")` must show `Created`, or reset
-   main with consent.
+   main.
 2. `scan_first(scannerName="main", valueType="int32", comparison="exact", value="1250")`, then poll.
 3. Ask the user to change the value once and report the new number, then
    `scan_next(scannerName="main", comparison="exact", value="1180")`. When only the change is known, use
@@ -277,13 +275,13 @@ match at any address. `aob_find_value.includeMapped` adds mapped memory, but not
 
 1. Read them all with `memory_read_batch(items=[{address="<address>", valueType="int32"}])`, or sample them while the
    value changes ("Sample survivors" above).
-2. With the user's consent, test one address at a time:
+2. Test one address at a time:
    `memory_write(address="<address>", valueType="int32", value="999")` returns `memory_write.previous`. Watch the
    game, then restore with `memory_write(address="<address>", valueType="bytes", value="<previous>")` unless the change
    is wanted. Never write every candidate at once: a wrong write can crash the target.
 3. The real value changes gameplay: damage uses it and shops accept it. A display copy changes only the HUD, or
    reverts on the next frame.
-4. For proof, and with consent to attach the debugger (`debugger_attach` first),
+4. For proof, attach the debugger (`debugger_attach` first),
    `debugger_start_capture(address="<address>", trigger="write")` shows the instruction that writes it; for an 8-byte
    value use `debugger_start_capture(address="<address>", trigger="write", size=8)` (see
    [find what writes](../Workflows/find-writer.md) and [debugger](debugger.md)).

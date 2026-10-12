@@ -3,7 +3,7 @@
 ## Goal
 
 Turn the current address list into a table that survives restarts and small game updates, test it, and save it to
-`{tablePath}` (ask for one when it is not given). Nothing is activated or changed without consent.
+`{tablePath}` (ask for one when it is not given).
 
 ## Steps
 
@@ -14,15 +14,14 @@ Turn the current address list into a table that survives restarts and small game
    module-relative address, or a chain (`offsets`) from one, is stable; a raw heap address or a script with
    hard-coded code addresses is fragile.
 4. Heap addresses: find a static path ([pointer scan](pointer-scan.md)) or an
-   [injection copy](injection-copy-base.md) symbol. With consent,
-   `record_update(updates=[{id=<id>, address="game.exe+1A2B30", offsets=["10", "4C8"]}])`: hex offsets, nearest the
+   [injection copy](injection-copy-base.md) symbol. `record_update(updates=[{id=<id>, address="game.exe+1A2B30", offsets=["10", "4C8"]}])`: hex offsets, nearest the
    base first, as `pointer_list_paths` gives them, sent with the address; `currentAddress` must be the value's address.
 5. Fixed-address scripts, disabled first (signatures need original bytes):
    `aob_generate_signature(address="<injection point>")` must be `unique` and `verified`; keep `pattern` and `offset`.
    `asm_generate_injection(module="<module>", signature="<pattern>", expectedBytes="<original bytes>", symbolName="<unique name>", offset=<offset>)`
    gives the scaffold; port the old code into it ([AOB injection](aob-injection.md)).
 6. `asm_check(script="<script>")` until `accepted` (see `failedSection`); review the `[DISABLE]`
-   ([review a script](review-aa-script.md)). With consent, on an inactive record (an active one is refused),
+   ([review a script](review-aa-script.md)), on an inactive record (an active one is refused),
    `record_set_script(id=<id>, script="<script>")`.
 7. `record_group(description="<feature> (build <timeDateStamp>)", ids=[<id>, <id>])`;
    `record_move(id=<id>, parentId=<groupId>)` adds more.
@@ -30,8 +29,8 @@ Turn the current address list into a table that survives restarts and small game
    `record_get` later), check the effect and `code_disassemble(address="<symbol>", count=3)`; then
    `record_set_active(ids=[<id>], active=false)`: `module_find_patches(module="<module>")` shows no range at the
    site. Twice.
-9. Before the user restarts the game, `runtime_list_resources()` must be empty (with consent,
-   `runtime_release_resources()`). Then `process_attach(process="<game.exe>")`; tell the user when `monoAutoAttach`
+9. Before the user restarts the game, `runtime_list_resources()` must be empty; release leftovers with
+   `runtime_release_resources()`. Then `process_attach(process="<game.exe>")`; tell the user when `monoAutoAttach`
    is true. `record_get` each record (`currentAddress`, `value`); repeat step 8.
 10. `table_save(path="{tablePath}", overwrite=false)`; if the file exists, ask before
     `table_save(path="{tablePath}", overwrite=true)`.
@@ -47,7 +46,7 @@ Turn the current address list into a table that survives restarts and small game
   `globalalloc` or a non-hex `$`. Prefer pure Auto Assembler, else review it by reading; tell the user.
 - `failedSection` disable over `symbol+N`: DISABLE is checked without ENABLE's symbols; use a bare `symbol:` line
   (none under `{$STRICT}`).
-- Named values: `record_get(ids=[<id>], includeDropdown=true)`, then with consent
+- Named values: `record_get(ids=[<id>], includeDropdown=true)`, then
   `record_set_dropdown(id=<id>, items=[{value="0", description="Off"}, {value="1", description="On"}])`.
 
 ## Pitfalls

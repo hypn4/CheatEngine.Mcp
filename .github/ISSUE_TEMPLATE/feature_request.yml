@@ -7,8 +7,6 @@ body:
     attributes:
       value: |
         Thank you for the suggestion.
-        CheatEngine.Mcp is for software you own or are authorized to modify.
-        Requests to bypass anti-cheat, DRM or license checks, to hide Cheat Engine from them, or to target online and multiplayer games are closed without discussion.
   - type: dropdown
     id: area
     attributes:
@@ -75,5 +73,5 @@ body:
       options:
         - label: I searched the existing issues and the documentation for this request.
           required: true
-        - label: The proposal serves software I own or am authorized to modify.
+        - label: The proposal describes the target software and how to test it.
           required: true

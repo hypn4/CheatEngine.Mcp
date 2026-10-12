@@ -4,9 +4,7 @@ A pointer chain finds a moving address from a static module root. First find the
 [value-scans](value-scans.md).
 
 Reading memory, capturing maps and searching paths do not change the target. Attaching the debugger, pausing the
-process, writing through a record and injecting code do: explain each one and get the user's consent first. Use them
-only on single-player or offline software the user owns or may modify, never on online, competitive or
-anti-cheat-protected games (see [safety](safety.md)).
+process, writing through a record and injecting code do.
 
 ## Notation and offset order
 
@@ -83,7 +81,7 @@ Module roots rebase; absolute roots remain absolute, so revalidate after restart
 Use it when you can make the game change the value. It needs the debugger (see [debugger](debugger.md)); the guided
 version is the [manual pointer chain](../Workflows/manual-pointer-chain.md) workflow.
 
-1. With consent, run `debugger_attach(interface="windows")`, then
+1. Run `debugger_attach(interface="windows")`, then
    `debugger_start_capture(address="<value address>", trigger="write", size=4)`, with the size of the value (the
    address must be aligned to it). Make the game change the value, then page the hits with
    `debugger_poll_capture(jobId="<jobId>")`. The `context` of a hit holds `instructionAddress`, `disassembly` and
@@ -260,7 +258,7 @@ or found so far. If the selected process changes during a capture, the map is di
   16384), then `maxDepth` by one. Every extra level, a larger offset and negative offsets multiply the work. Games on
   large engines such as Unity and Unreal often need both; prefer their runtime roots
   (see [game engines](game-engines.md)).
-- Values move while a large map is read. With consent, run `process_set_paused(paused=true)` during the capture and
+- Values move while a large map is read. Run `process_set_paused(paused=true)` during the capture and
   always `process_set_paused(paused=false)` afterwards: MCP's pause is a tracked resource that blocks `process_attach`
   and `debugger_detach` until you resume.
 - Stop a job with `runtime_stop_job(jobId="<jobId>")`: a stopped capture or search keeps what it had.
@@ -318,7 +316,7 @@ update breaks it.
   that symbol as the root:
   `record_create(records=[{description="Health", address="playerBase", variableType=2, offsets=["4C8"]}])`.
   The symbol holds 0 until the code runs, and a stale object after a reload until it runs again. This needs
-  `Mcp:EnableAutoAssembler` and consent. See the [injection copy base](../Workflows/injection-copy-base.md) workflow,
+  `Mcp:EnableAutoAssembler`. See the [injection copy base](../Workflows/injection-copy-base.md) workflow,
   [auto-assembler](auto-assembler.md) and [x64 injection](x64-injection.md).
 - **RIP-relative globals.** x64 code reads a global with `mov rax,[rip+disp32]`. The tools print the resolved target
   as absolute hex, never as a module name: `mov rax,[7FF6A1DF1A30]`. Read the code before the writer with

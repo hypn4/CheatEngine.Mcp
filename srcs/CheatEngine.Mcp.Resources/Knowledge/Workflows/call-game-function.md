@@ -3,7 +3,7 @@
 ## Goal
 
 Call the game function at `{functionAddress}` once to achieve `{purpose}`, as a method of the object at
-`{instanceAddress}` when given, then verify the effect. Single-player or offline software the user may modify only.
+`{instanceAddress}` when given, then verify the effect. 
 It runs game code on a new thread and cannot be undone, only compensated.
 
 ## Steps
@@ -18,12 +18,12 @@ It runs game code on a new thread and cannot be undone, only compensated.
    `completed`) until `code_find_references(address="{functionAddress}")` lists a caller. Then
    `code_disassemble(address="<fromAddress>", before=12, count=2)` shows what the caller loads: each argument's type,
    a typical value (hexadecimal) and whether RCX (x86: ECX) holds an object.
-4. Agree on the arguments with the user. Text or a struct goes in a buffer, with consent:
+4. Agree on the arguments with the user. Text or a struct goes in a buffer
    `memory_allocate(name="call-arg", size=<bytes>)`, then
    `memory_write(address="<address>", valueType="string", value="<text>", nullTerminate=true)`: `wstring` for
    wchar_t text (as the caller's text reads), `bytes` without a terminator for a struct.
 5. Read what the call should change (`memory_read`) and ask the user to save the game.
-6. With consent, naming the function, the arguments and the risk, call once, integers and the buffer's `address` as
+6. Naming the function, the arguments and the risk, call once, integers and the buffer's `address` as
    0x hexadecimal:
    `exec_call_remote(functionAddress="{functionAddress}", arguments=[{type="integer", value="0x3E8"}], timeoutMilliseconds=10000)`,
    or for a method
@@ -35,7 +35,7 @@ It runs game code on a new thread and cannot be undone, only compensated.
 
 ## Decisions
 
-- `busy`, `hostEffect` not_started: the target is paused or at a breakpoint; with consent resume it
+- `busy`, `hostEffect` not_started: the target is paused or at a breakpoint; resume it
   (`process_set_paused(paused=false)` or `debugger_continue`), then call once.
 - A timeout, or `host_refused` with `hostEffect` unknown: the thread may still run. Never call again; read the value
   of step 5, wait, read again, and keep the buffer until the effect is known.
@@ -49,7 +49,7 @@ It runs game code on a new thread and cannot be undone, only compensated.
 
 ## Pitfalls
 
-- One consent, one call: calling again repeats the effect (1000 gold twice).
+- One call, one effect: calling again repeats it (1000 gold twice).
 - Digits alone are decimal: pass the disassembly's `mov edx,00000064` as `"0x64"` (100), and a `memory_allocate`
   `address` such as 3250000 as `"0x3250000"`.
 - A function may keep the buffer's address (a name setter): freeing it then corrupts the game.

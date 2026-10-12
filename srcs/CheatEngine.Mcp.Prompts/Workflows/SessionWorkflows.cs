@@ -8,19 +8,19 @@ namespace CheatEngine.Mcp.Prompts.Workflows;
 internal static class SessionWorkflows
 {
 	internal static readonly WorkflowDefinition AttachAndOrient =
-		new("attach_and_orient", "attach-and-orient", ["safety", "mono-and-dotnet"])
+		new("attach_and_orient", "attach-and-orient", ["mono-and-dotnet"])
 		{
 			Arguments = [new WorkflowArgument("process"), new WorkflowArgument("goal", WorkflowInputKind.Prose)]
 		};
 
 	internal static readonly WorkflowDefinition EngineTriage =
-		new("engine_triage", "engine-triage", ["game-engines", "mono-and-dotnet", "safety"])
+		new("engine_triage", "engine-triage", ["game-engines", "mono-and-dotnet"])
 		{
 			Arguments = [new WorkflowArgument("goal", WorkflowInputKind.Prose)]
 		};
 
 	internal static readonly WorkflowDefinition PlanCheat =
-		new("plan_cheat", "plan-cheat", ["workflows", "cheat-recipes", "safety"])
+		new("plan_cheat", "plan-cheat", ["workflows", "cheat-recipes"])
 		{
 			Arguments =
 			[

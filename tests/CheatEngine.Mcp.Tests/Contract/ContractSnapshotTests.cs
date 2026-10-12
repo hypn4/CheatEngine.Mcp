@@ -129,7 +129,7 @@ public sealed class ContractSnapshotTests
 			// The executable serves the embedded knowledge itself: a document, a workflow body and a rendered prompt.
 			ReadResourceResult safety = await client.ReadResourceAsync("cheatengine://docs/safety",
 				cancellationToken: TestContext.Current.CancellationToken);
-			Assert.StartsWith("# Safety and responsible use",
+			Assert.StartsWith("# Safety",
 				Assert.IsType<TextResourceContents>(Assert.Single(safety.Contents)).Text, StringComparison.Ordinal);
 			ReadResourceResult body = await client.ReadResourceAsync("cheatengine://docs/workflows/nop-patch",
 				cancellationToken: TestContext.Current.CancellationToken);

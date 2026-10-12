@@ -3,8 +3,7 @@
 ## Goal
 
 Find the address of a number the game shows: `{currentValue}` now, scan type `{valueType}` (`auto`: you choose),
-described as `{description}`. Only on single-player or offline software the user may modify; each test write and
-record needs the user's consent.
+described as `{description}`.  
 
 ## Steps
 
@@ -22,11 +21,10 @@ record needs the user's consent.
    happens: `scan_next(scannerName="main", comparison="unchanged")`. Repeat 4-5 until about 10 rows remain.
 6. `scan_list_results(scannerName="main", startIndex=0, maximumResults=20)`, then
    `memory_get_address_info(addresses=["<a1>", "<a2>"])`: region type `image` is static, `private` is heap.
-7. `memory_read_batch(items=[{address="<a1>", valueType="int32"}])` (scan `byte` reads as `uint8`). With consent,
-   test one candidate at a time: `memory_write(address="<a1>", valueType="int32", value="<test value>")`, keep
+7. `memory_read_batch(items=[{address="<a1>", valueType="int32"}])` (scan `byte` reads as `uint8`). test one candidate at a time: `memory_write(address="<a1>", valueType="int32", value="<test value>")`, keep
    `previous`, ask whether the game changed, and restore unless wanted:
    `memory_write(address="<a1>", valueType="bytes", value="<previous>")`.
-8. With consent, `record_create(records=[{description="{description}", address="<address>", variableType=2}])`
+8. `record_create(records=[{description="{description}", address="<address>", variableType=2}])`
    (0 byte, 1 int16, 3 int64, 4 float, 5 double; text is 6 with `length=<characters>`, plus `unicode=true` for
    `wstring`); with no `value`, nothing is written. Keep the record id.
 

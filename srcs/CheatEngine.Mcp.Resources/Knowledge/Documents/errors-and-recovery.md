@@ -2,7 +2,7 @@
 
 Read this page when a tool call returns `isError`, a resource or prompt read fails, or a call times out. It explains
 the error envelope, every failure kind with its next step, and how to recover without repeating a side effect. Session
-rules are in [workflows](workflows.md) and consent in [safety](safety.md); the
+rules are in [workflows](workflows.md); the
 [explain_error](../Workflows/explain-error.md) prompt walks through one failure, and
 [cleanup_session](../Workflows/cleanup-session.md) releases what a session owns.
 
@@ -67,8 +67,8 @@ Not every negative answer is a failure. Check these fields in successful results
 | `invalid_argument` | Input rejected before anything ran: bad expression, type, range, format or option mix, an ambiguous name or pattern; at the gateway also a missing `instanceId` or an unknown tool. | Fix the argument named in `details.parameter` (or at the start of `message`) from the schema and `hint`; call again. |
 | `invalid_state` | CE or the target forbids it now: target paused or stopped in the debugger, no process for `process_set_paused` or `speedhack_set_speed`, wrong record kind or an active script record, a scanner still scanning, without results or invalidated for good, a name in use, a record id from before the last table load, a failed Mono collector pipe or CE's Mono timeout dialog, a changed CE Lua runtime. | Read the state (`process_get_current`, `debugger_get_status`, `scan_get_status`), fix the precondition, call again; after a Mono pipe failure the next Mono call reconnects once, else follow the hint. |
 | `not_found` | Unknown or expired id, name, symbol, module or address: a stopped job or one past its lifetime (`Mcp:Execution:JobDefaultTtlSeconds`, 120 s by default, 300 s at most), a released patch, a deleted record or scanner, a symbol this activation did not register, an id of an earlier activation. | List the current items and use a fresh id. Never read it as success. |
-| `not_attached` | No target process is selected; for a `mono_` or `dotnet_` tool, also no attached (or an aborted) Mono or .NET data collector. | `process_list`, then `process_attach` the target the user authorized; for Mono, `mono_get_status` and, with consent, `mono_attach`. |
-| `busy` | Something competes: the main scan runs, owned resources block `debugger_detach` or a target change (orphans too), a snapshot, rescan or code dissect still runs, nested first scans disagree on `scan_first.includeMapped`, the target is paused or stopped where a call must run code in it or read .NET data, or the activation is at `Mcp:Execution:MaxConcurrentDispatches` (4) or `Mcp:Execution:MaxJobs` (16). | Wait or poll, stop the scan (`scan_stop`) or a job, or release resources with consent; repeat once when `retryable`. |
+| `not_attached` | No target process is selected; for a `mono_` or `dotnet_` tool, also no attached (or an aborted) Mono or .NET data collector. | `process_list`, then `process_attach` the target the user authorized; for Mono, `mono_get_status` and `mono_attach`. |
+| `busy` | Something competes: the main scan runs, owned resources block `debugger_detach` or a target change (orphans too), a snapshot, rescan or code dissect still runs, nested first scans disagree on `scan_first.includeMapped`, the target is paused or stopped where a call must run code in it or read .NET data, or the activation is at `Mcp:Execution:MaxConcurrentDispatches` (4) or `Mcp:Execution:MaxJobs` (16). | Wait or poll, stop the scan (`scan_stop`) or a job, or release resources; repeat once when `retryable`. |
 | `timeout` | A deadline passed. At the gateway the outcome is `unknown`; a bounded read past its dispatch budget reports `completed` (see Timeouts below). | Never repeat a mutation; read the state. Narrow a read and repeat it. |
 | `cancelled` | A cancellation was observed before the operation completed. | Repeat only after `not_started` or `not_applied` (then it is `retryable`). |
 | `capability_disabled` | An `Mcp:Enable...` switch named in the message is off; nothing ran (`runtime_get_info.gates` shows all four). Some tools need it only for some arguments or content, such as `debugger_attach` with VEH or kernel, or `table_load`. | Tell the user; only they change it, then disable and re-enable the plugin ([configuration](configuration.md)). Never work around it. |
@@ -76,7 +76,7 @@ Not every negative answer is a failure. Check these fields in successful results
 | `target_changed` | CE selected another process, or the target's identity could not be confirmed, during the call or since a live snapshot. | `process_get_current`, confirm the target with the user, re-derive addresses, repeat reads only. |
 | `host_refused` | CE refused: an Auto Assembler or Lua error, a refused call, a failed precondition inside a fixed script (see Debugger preconditions below). `hostEffect` ranges from `not_started` to `unknown`. | Fix the input from `message`; check scripts with `asm_check`; after `started` or `unknown`, inspect first. |
 | `memory_read_failed` | Unreadable address: unmapped, guard page, protection, freed object, broken pointer hop. | `memory_get_address_info`; for a pointer chain, `details` names the hop. |
-| `memory_write_failed` | A write was rejected; `hostEffect` says whether any byte changed. | Check the region with `memory_get_address_info`; `memory_set_protection` only with consent; read before a retry. |
+| `memory_write_failed` | A write was rejected; `hostEffect` says whether any byte changed. | Check the region with `memory_get_address_info`; `memory_set_protection` only as needed; read before a retry. |
 | `limit_exceeded` | A size, count or result bound was exceeded. A server check names the parameter in `details`; a result too large to copy back reports `completed` (the script already ran). | Lower the limit or size, page, or narrow the range or module. |
 | `partial_effect` | A composite operation stopped midway; some steps applied. Never a success. | Report what applied from `details`, inspect, then finish or undo explicitly. |
 | `stopping` | The plugin activation is stopping or has ended: `not_started` when the call never reached CE, otherwise usually `unknown`. | Stop. Through the gateway, call `instance_list` later (a re-enable issues a new id); read the state before any change. |
@@ -112,7 +112,7 @@ entry only at the end of a cleanup (see Releasing owned resources below). Other 
 
 | Tool | Kind | `details` | Next step |
 |---|---|---|---|
-| `process_attach`, `process_create`, `process_open_file` | `busy` | `resources` (blockers, newest first), or `refusals` (`message`, `hint`, `details`) when owned resources and a running main scan both block | Release the resources with consent or stop the scan, then repeat |
+| `process_attach`, `process_create`, `process_open_file` | `busy` | `resources` (blockers, newest first), or `refusals` (`message`, `hint`, `details`) when owned resources and a running main scan both block | Release the resources or stop the scan, then repeat |
 | `memory_write_batch` | `partial_effect` (the mapped kind, such as `memory_write_failed`, when nothing was written) | `completed`, `failedIndex`, `effectState` (`not_started`, `partial`, `unknown`) | `memory_read_batch` the items; completed ones stay written |
 | `memory_load_from_file` | `partial_effect` | `path`, `address`, `bytesWritten`, `totalBytes` | Read the destination range first |
 | `record_create` | `partial_effect` (the rollback kept records) | `created`, `rolledBack` | `record_find` or `record_get` the kept records |

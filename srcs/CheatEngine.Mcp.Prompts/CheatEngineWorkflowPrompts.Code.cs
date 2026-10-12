@@ -185,7 +185,7 @@ public sealed partial class CheatEngineWorkflowPrompts
 	/// <summary>Call a game function once.</summary>
 	[McpServerPrompt(Name = "call_game_function", Title = "Call a game function once")]
 	[Description("Run one game function once, such as one that adds gold: find its arguments at a call site, pass "
-				 + "numbers or a buffer, call it with consent and verify the effect." + NeedsTargetCodeExecution)]
+				 + "numbers or a buffer, call it once and verify the effect." + NeedsTargetCodeExecution)]
 	public static GetPromptResult CallGameFunctionPrompt(
 		[Display(Name = "Function address")]
 		[Description("The entry address of the function. " + AddressHelp)]

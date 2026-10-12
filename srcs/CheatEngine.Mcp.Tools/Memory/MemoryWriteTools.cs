@@ -191,7 +191,7 @@ public sealed class MemoryWriteTools
 		ReadOnly = false, Destructive = true, Idempotent = false, OpenWorld = false, UseStructuredContent = true)]
 	[McpMeta(McpDispatchClass.MetaKey, McpDispatchClass.Short)]
 	[Description(
-		"Change the page protection of up to 16 MiB of target memory (Cheat Engine's setMemoryProtection, or fullAccess when read, write and execute are all set). The entire range must fit in one committed memory region, so its returned previous access can restore the range. A change Cheat Engine refuses, such as write and execute together where the system forbids them, fails with host_refused. Change protection only with consent and restore previous when done.")]
+		"Change the page protection of up to 16 MiB of target memory (Cheat Engine's setMemoryProtection, or fullAccess when read, write and execute are all set). The entire range must fit in one committed memory region, so its returned previous access can restore the range. A change Cheat Engine refuses, such as write and execute together where the system forbids them, fails with host_refused. Restore the previous access when done.")]
 	public ProtectionChange SetProtection(
 		[Description("An address or Cheat Engine address expression.")]
 		string address,

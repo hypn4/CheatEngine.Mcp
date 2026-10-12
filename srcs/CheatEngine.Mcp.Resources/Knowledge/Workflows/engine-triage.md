@@ -7,23 +7,21 @@ numbers, and choose the anchor and the next workflow for `{goal}`. Every step on
 
 ## Steps
 
-1. If not asked yet, ask whether the game is offline and free of anti-cheat; stop otherwise
-   ([safety](../Documents/safety.md)).
-2. `process_get_current()`: `processName` and `pointerSize` (4: a 32-bit target, so 64-bit layouts and offsets do not
+1. `process_get_current()`: `processName` and `pointerSize` (4: a 32-bit target, so 64-bit layouts and offsets do not
    apply). No target: run [attach and orient](attach-and-orient.md) first.
-3. `module_list(format="detailed", limit=200)`: the runtime DLLs and the game folder; page with `offset` while
+2. `module_list(format="detailed", limit=200)`: the runtime DLLs and the game folder; page with `offset` while
    `module_list.nextOffset` is present.
-4. `module_get(module="<processName>")`: `pe.managed` true means a .NET Framework executable (.NET Core and 5+ start
+3. `module_get(module="<processName>")`: `pe.managed` true means a .NET Framework executable (.NET Core and 5+ start
    from a native host, so look for `coreclr.dll`); keep `pe.timeDateStamp`.
-5. Exports: `module_list_exports(module="GameAssembly.dll", nameContains="il2cpp_")` confirms IL2CPP,
+4. Exports: `module_list_exports(module="GameAssembly.dll", nameContains="il2cpp_")` confirms IL2CPP,
    `module_list_exports(module="<the mono DLL>", nameContains="thread_attach")` Mono.
-6. Version text: `aob_find_value(valueType="wstring", value="++UE", module="<processName>", limit=5)`, then
+5. Version text: `aob_find_value(valueType="wstring", value="++UE", module="<processName>", limit=5)`, then
    `memory_read(address="<match>", valueType="wstring", length=64)` reads `++UE4+Release-4.27` or
    `++UE5+Release-5.3` (it may be ANSI: search as `string` too). Godot:
    `aob_find_value(valueType="string", value="Godot Engine", module="<processName>", limit=2)`.
-7. Emulators: `memory_list_regions(type="mapped", format="detailed", limit=100)` may show a mapped view sized like
+6. Emulators: `memory_list_regions(type="mapped", format="detailed", limit=100)` may show a mapped view sized like
    the console's RAM (Cemu keeps it in `private` memory).
-8. `process_list(nameContains="<name>")`: several processes mean a launcher beside the game or Chromium renderers;
+7. `process_list(nameContains="<name>")`: several processes mean a launcher beside the game or Chromium renderers;
    ask which one runs the game. Ask too about files the tools cannot list: `data.win`, `*.pck`, `www/js`,
    `resources/app.asar`, `<Game>_Data/il2cpp_data`.
 
@@ -59,7 +57,7 @@ numbers, and choose the anchor and the next workflow for `{goal}`. Every step on
 
 - The wrong type finds nothing: a 4-byte exact scan misses doubles and tagged integers (500 gold in RPG Maker XP is
   1001).
-- "Obscured" or encrypted values, DRM or licence checks, or a module or process named after an anti-cheat: tell the
+- "Obscured" or encrypted values: tell the
   user and stop.
 - Offsets from another game or build do not carry over.
 - Dumpers and Java agents inject into the game: the user's decision; these tools never run them.
@@ -67,5 +65,5 @@ numbers, and choose the anchor and the next workflow for `{goal}`. Every step on
 ## Report
 
 The engine and version with its evidence, `pointerSize`, the predicted value representation, the anchor, the next
-workflow for `{goal}`, and the user's answer on online play and anti-cheat. Nothing to undo. Background:
+workflow for `{goal}`. Nothing to undo. Background:
 [game engines](../Documents/game-engines.md), [Mono and .NET](../Documents/mono-and-dotnet.md).

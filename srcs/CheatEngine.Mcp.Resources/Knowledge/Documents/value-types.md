@@ -123,7 +123,7 @@ in [troubleshooting-scans](troubleshooting-scans.md).
 - Bit fields: MSVC fills them from the least significant bit up, in units of the declared type (4 bytes for `int` or
   `unsigned`). Read the unit as that unsigned type, toggle one thing, read again; the XOR is the mask:
   `util_calculate(expression="0x41 ^ 0x45")` gives 4. Set a bit with `|`, clear it with `& ~`, and write back only
-  after consent; the game may rewrite the unit meanwhile.
+  the game may rewrite the unit meanwhile.
 - Code hints: `movzx r32, byte ptr [...]` or `cmp byte ptr [...],0` reads a bool or byte; `test [...],2^n` tests one
   flag bit ([code-analysis](code-analysis.md)).
 - Record code 9 (binary) exists, but no record tool sets its start bit or bit count: keep a byte or 4-byte record.
@@ -151,8 +151,6 @@ in [troubleshooting-scans](troubleshooting-scans.md).
 - Encoded: XOR with a key, an added offset, or a second copy with a checksum. Encoding scrambles order, so use an
   unknown scan with `changed` and `unchanged`. The writer's registers often hold the plain value
   ([debugger](debugger.md)).
-- Stop at protection: "obscured" or encrypted types from anti-cheat or anti-tamper libraries, DRM and licence checks
-  mean the developer opposes modification. Tell the user; do not decode them ([safety](safety.md)).
 
 ## Tagged and engine-specific numbers
 
@@ -168,7 +166,7 @@ in [troubleshooting-scans](troubleshooting-scans.md).
 | Unity, native C++ | plain fields of the declared type | offsets from `mono_list_fields` | same type |
 
 - Verify a Godot hit with `memory_read(address="<hit>-8", valueType="int32")`: 2 or 3.
-- Unity (Mono or IL2CPP), with the collector attached after consent: `mono_get_object(address="<hit>")` walks back
+- Unity (Mono or IL2CPP), with the collector attached: `mono_get_object(address="<hit>")` walks back
   from a hit to its object and returns the class, `mono_get_object.offsetInObject` and the fields with their values
   ([mono-and-dotnet](mono-and-dotnet.md)).
 - RPG Maker MV and MZ run on NW.js, whose V8 build picks the row: attach to the renderer process with the most memory
@@ -208,7 +206,7 @@ in [troubleshooting-scans](troubleshooting-scans.md).
   hit-0xC. Then `pointer_find_references(target="<object>")` finds the field that holds it; on Unity,
   `mono_get_object(address="<reference address>")` names the holding class, and its `mono_get_object.offsetInObject`
   the field ([find_text](../Workflows/find-text.md)).
-- Editing, after consent: same length or shorter,
+- Editing: same length or shorter,
   `memory_write(address="...", valueType="wstring", value="...", nullTerminate=true)`, then update the length field
   (managed length, `std::string` size, `FString` Num). Never write past the old length: the next object follows.
   Managed strings are immutable and may be shared by every use of a literal; the game may keep other copies or rebuild
@@ -221,7 +219,7 @@ in [troubleshooting-scans](troubleshooting-scans.md).
 - Read and write with a byte order: `memory_read(address="...", valueType="int32", byteOrder="big_endian")` reads
   `00 00 00 64` as 100, and
   `memory_write(address="...", valueType="int32", value="999", byteOrder="big_endian", verify=true)` writes
-  `00 00 03 E7` (after consent). The items of `memory_read_batch` and `memory_write_batch`, and `memory_read_samples`,
+  `00 00 03 E7`. The items of `memory_read_batch` and `memory_write_batch`, and `memory_read_samples`,
   take the same `byteOrder`. It applies to `int16` to `uint64`, `float` and `double`; `int8`, `uint8`, `pointer`,
   `string`, `wstring` and `bytes` refuse `big_endian` (invalid_argument; a batch refuses the whole batch). A guest
   pointer is a guest address: read it as `uint32` with `big_endian` (decimal), then map it to a host address
@@ -248,8 +246,7 @@ in [troubleshooting-scans](troubleshooting-scans.md).
   addresses (`80xxxxxx` on GameCube), not host ones: [emulators](emulators.md),
   [emulator_memory](../Workflows/emulator-memory.md).
 
-Writes, freezes and string edits change the target: only on single-player or offline software the user owns or may
-modify, never on online, competitive or anti-cheat-protected games, and only after explaining each change. Records:
+Writes, freezes and string edits change the target. Records:
 [cheat-tables](cheat-tables.md); layouts: [structures](structures.md).
 
 ## Sources

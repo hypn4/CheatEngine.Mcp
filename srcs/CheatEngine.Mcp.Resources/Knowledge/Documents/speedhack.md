@@ -5,31 +5,26 @@ process reads. Read this page before the first `speedhack_set_speed` call in a p
 code in the target for the rest of its life, and speed 1 does not undo it. The guided version is
 [speedhack](../Workflows/speedhack.md).
 
-## Responsible use and consent
+## Before the first speed change
 
-- Use it only on single-player or offline software that the user owns or may modify. Never use it on online,
-  multiplayer, competitive or anti-cheat-protected games. The server keeps real time, so the game desyncs or
-  disconnects, and changing such a game breaks its terms and can get the account banned. For those games the answer is
-  "not with this tool" (see [safety](safety.md)).
-- A single-player game with online parts (leaderboards, synced achievements, a cloud economy) counts as online unless
-  the user confirms that a fully offline mode is in use.
+- The server keeps real time, so an online game desyncs or disconnects.
 - Before the first speed change in a process, tell the user:
   - what it does: CE compiles its helper code into the game and hooks its clocks, and in a Mono or IL2CPP game (most
     Unity games) it also injects CE's Mono data collector DLL. All of it stays until the game exits;
   - what can break: physics, audio and network timeouts (see Side effects below);
   - how to undo it: set speed 1, then restart the game to get a clean process.
 
-  Wait for a yes. Confirm each later change, and ask again after switching processes. Suggest an in-game save first.
+  Suggest an in-game save first.
 - CE's graphical tutorial `gtutorial-x86_64.exe`, in CE's folder, is a safe target to try it on. Its source times the
   game with `GetTickCount64`, one of the clocks CE hooks (see [CE tutorial](ce-tutorial.md)).
 
 ## Tools
 
-| Tool or resource                   | Does                                   | Returns                              |
+| Tool or resource | Does | Returns |
 |------------------------------------|----------------------------------------|--------------------------------------|
-| `speedhack_get_state()`            | reads CE's configured speed and symbol | `speed`, `hooksInstalled`            |
-| `speedhack_set_speed(speed=...)`   | sets it; other than 1 may activate it  | also `firstActivation`, `resourceId` |
-| `cheatengine://instance/speedhack` | live copy of `speedhack_get_state`     | the same fields                      |
+| `speedhack_get_state()` | reads CE's configured speed and symbol | `speed`, `hooksInstalled` |
+| `speedhack_set_speed(speed=...)` | sets it; other than 1 may activate it | also `firstActivation`, `resourceId` |
+| `cheatengine://instance/speedhack` | live copy of `speedhack_get_state` | the same fields |
 
 - Through the gateway the live resource is `cheatengine://instances/{instanceId}/speedhack`. The gateway lists it once
   it has confirmed that instance, for example after `instance_list`.
@@ -53,7 +48,6 @@ code in the target for the rest of its life, and speed 1 does not undo it. The g
 
 ## Use it
 
-1. Get consent as described above.
 2. `speedhack_get_state()`: note `speed`, the value before your change, and `hooksInstalled` (see below).
 3. `speedhack_set_speed(speed=2)`. Keep the returned `resourceId`. Check `speed`, `hooksInstalled` and
    `firstActivation`, and after a first activation ask whether CE showed a dialog.
@@ -211,7 +205,7 @@ To get a clean process, save the game and restart it.
   A game that mixes these with hooked clocks stutters or partly ignores the speedhack. A game that advances its logic
   per frame barely reacts.
 - **Network.** Every thread sees the scaled clock, so keep-alives and timeouts fire early above 1 and late below 1. A
-  "single-player" game that talks to a server can drop its connection, for example for DRM check-ins, cloud saves or
+  An offline game that talks to a server can drop its connection, for example for cloud saves or
   telemetry.
 - **Precision.** The Windows replacements multiply the elapsed ticks by a 32-bit float. The scaled clock therefore gets
   coarser the longer the speed stays unchanged, even at 1. With a 10 MHz performance counter the steps grow to about
@@ -251,7 +245,7 @@ For engine detection and the Mono collector, see [game engines](game-engines.md)
      sure "Enable Speedhack" is ticked in CE, enter 1 and click Apply; otherwise save and restart the game.
   2. Today the tool keeps that failed restore, so every later `speedhack_set_speed` call, speed 1 included, fails the
      same way until the plugin is disabled and enabled again.
-  3. The entry blocks target changes until it is acknowledged. At the end of cleanup, with the user's consent, call
+  3. The entry blocks target changes until it is acknowledged. At the end of cleanup, call
      `runtime_release_resources(acknowledgeIds=["<old resource id>"])`, which also releases everything else MCP holds.
      If `runtime_list_resources` still lists the id, acknowledge it again.
 - A timeout or a lost response leaves the outcome unknown, often because a CE dialog is waiting. Ask the user to close

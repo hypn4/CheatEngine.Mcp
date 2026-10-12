@@ -31,7 +31,7 @@ AI client --stdio--> CheatEngine.Mcp.Gateway.exe --HTTP on 127.0.0.1, bearer tok
 2. **CE's host configuration.** `ce.runtimeconfig.json`, next to the CE executables, selects the .NET runtime that CE
    loads plugins into. It must select `net10.0` and list all three frameworks at version `10.0.0` with a roll-forward
    policy such as `LatestMinor`. Installing .NET 10 does not fix a file that pins another major version (`Minor` and
-   `LatestMinor` never cross a major version) or leaves out ASP.NET Core. To fix it, with the user's consent: close CE,
+   `LatestMinor` never cross a major version) or leaves out ASP.NET Core. To fix it: close CE,
    back the file up, edit only `runtimeOptions`, restart CE. A Program Files install may need an elevated editor.
 3. **Enable the plugin.** In CE, open **Edit > Settings > Plugins**, choose **Add new**, select
    the deployed `CheatEngine.Mcp.dll`, tick its checkbox and close the dialog. Keep the DLL name unchanged. No plugin
@@ -149,7 +149,7 @@ that a backend is healthy. Restart the client session when new tools do not appe
   table load.
 - Lua state left by an earlier activation (a speed other than 1, MCP's pause, MCP-set breakpoints, an unfinished Lua
   job, a failed cleanup) shows as `orphaned` in `runtime_list_resources()`. It blocks a target change. Release it only
-  with the user's consent, at the end of cleanup or before a target switch:
+  at the end of cleanup or before a target switch:
   `runtime_release_resources(includeOrphans=true)` also releases everything the new activation holds.
 
 **`stopping`**
@@ -184,7 +184,7 @@ that a backend is healthy. Restart the client session when new tools do not appe
 - `process_attach`, `process_create` and `process_open_file` are refused while an MCP-owned resource holds state (a
   patch, allocation, named scanner, symbol, breakpoint, running job, MCP's pause, a speed other than 1, the Mono
   attachment, or an orphan or failed cleanup of an earlier activation) or while the main scan runs. The `details` field
-  lists the blockers, and `runtime_list_resources()` lists the resources. With the user's consent, release them with
+  lists the blockers, and `runtime_list_resources()` lists the resources. Release them with
   `runtime_release_resources()` (orphans need `includeOrphans=true`), and wait for the main scan
   (`scan_get_status()`) or stop it (`scan_stop()`), then repeat the call. An entry that needs manual recovery stays
   listed until the user recovers it and it is acknowledged; see [errors and recovery](errors-and-recovery.md) and
@@ -303,7 +303,7 @@ See [configuration](configuration.md) for private stack diagnostics.
   Keep a partial upgrade disabled until both paths select one complete matching package.
 - **Rollback.** Stop this CE instance and gateway; replace this plugin's CE entry with its old entry, restore the old gateway registration and changed configuration from backup, including CE's runtime configuration.
   Re-enable, reconnect, rediscover and verify the loaded version before resuming.
-- **Disable or removal.** Run [cleanup_session](../Workflows/cleanup-session.md) first, with the user's consent. A
+- **Disable or removal.** Run [cleanup_session](../Workflows/cleanup-session.md) first. A
   disable stops the activation's jobs and releases its Client leases (allocations, patches, named scanners,
   registered symbols). Effects recorded in CE's Lua state stay: a speed other than 1, MCP's pause, MCP-set breakpoints
   and any failed cleanup. The next activation lists them as `orphaned`. CE-owned state also survives a disable:
@@ -312,13 +312,11 @@ See [configuration](configuration.md) for private stack diagnostics.
   To uninstall, remove this plugin's CE entry and gateway registration, close their processes and delete only this integration's deployment files.
   Keep user settings, tables and unrelated plugins unless the user chooses their removal.
 
-## Responsible use
+## Trust boundary
 
 The connection is local only: a loopback backend, a per-user registry and a token per activation. Never forward its
 port or try to widen `Mcp:Host` (it accepts only `127.0.0.1`) to repair discovery, and never repeat a mutation only
-because the transport failed. Use the server only with single-player or offline software that the user owns or may
-modify, never with online or competitive games or titles protected by anti-cheat. Change the switches or file roots
-only when the user decides to.
+because the transport failed. Change the switches or file roots only when the user decides to.
 
 ## Sources
 

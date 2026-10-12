@@ -3,14 +3,13 @@
 ## Goal
 
 Find a static path to the dynamic value at `{address}` by walking back through the code that uses it, at most
-`{maxLevels}` levels (default 4), and prove that it survives a restart. Single-player or offline software the user may
-modify only.
+`{maxLevels}` levels (default 4), and prove that it survives a restart. 
 
 ## Steps
 
 1. `process_get_current()`: note `pointerSize` (8 on x64, 4 on x86) and `processName`.
    `memory_get_address_info(addresses=["{address}"])`: an address with a `module` is already static; stop.
-2. Explain the debugger (games can detect it or crash), ask for consent, then `debugger_attach(interface="windows")`.
+2. Explain the debugger (a stopped thread freezes the game), then `debugger_attach(interface="windows")`.
 3. Level 1: `debugger_start_capture(address="{address}", trigger="access", size=4, aggregateByInstruction=true)`
    (size = the value's width; the address must be aligned to it); keep the `jobId`. The user makes the game use the
    value; read the hits with `debugger_poll_capture(jobId=..., afterSequence=0)`, then `runtime_stop_job(jobId=...)`.
@@ -28,7 +27,7 @@ modify only.
 8. Stop every capture with `runtime_stop_job(jobId=...)`, then `debugger_detach()`.
 9. The user restarts the game; `process_attach(process="<processName>")`, find the value again and repeat step 7: the
    new `address` must hold it.
-10. With consent:
+10.
     `record_create(records=[{description="...", address="game.exe+1A2B30", variableType=2, offsets=["18", "4C8"]}])`:
     step 7's offsets; `variableType` 2 int32, 4 float, 5 double; without a `value` nothing is written. Keep the
     `id`; `currentAddress` must be the value's address.

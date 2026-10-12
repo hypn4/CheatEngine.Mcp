@@ -13,8 +13,6 @@ Read [Lua in CheatEngine.Mcp](lua.md) first, and use the dedicated tools each gr
   driver or hypervisor; **[UI]** modal dialog or long wait on the calling thread; **[H]** acts on CE itself or the host.
 - `lua_execute` runs on CE's main thread, so a **[UI]** call freezes CE and every MCP call to that instance
   ([CE's main thread](lua.md#ces-main-thread)).
-- Get consent before any **[W]**, **[X]**, **[K]** or **[H]** call. Use them only on single-player or offline software
-  the user owns or may modify, never on online or anti-cheat-protected games ([safety](safety.md)).
 - From Lua these functions skip every `Mcp:Enable…` gate except `Mcp:EnableUnsafeLua`; `runtime_get_info` reports the
   gates. After a tool returns `capability_disabled`, never make the same change from Lua
   ([not a sandbox](lua.md#not-a-sandbox)).

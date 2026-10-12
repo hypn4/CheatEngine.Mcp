@@ -4,7 +4,7 @@
 
 Hold the `{valueType}` at `{address}` at `{value}` (or at its current value when `{value}` is not given) with a Cheat
 Engine address-list record described as `{description}` (propose one if not given), verify that it holds and leave
-an undo. Single-player or offline software the user may modify only.
+an undo. 
 
 ## Steps
 
@@ -15,7 +15,7 @@ an undo. Single-player or offline software the user may modify only.
    address; a private (heap) region moves after a restart (Decisions).
 3. `record_find(address="<symbol or {address}>")`: reuse a match of the same `variableType` (keep its `id`, skip
    step 5).
-4. Ask for consent: a `{value}` is written at creation, and an active record rewrites the value every freeze tick
+4. Ask for a `{value}` is written at creation, and an active record rewrites the value every freeze tick
    (100 ms by default).
 5. `<code>` is the variableType beside `{valueType}` in the inputs:
    `record_create(records=[{description="{description}", address="<symbol or {address}>", variableType=<code>, value="{value}", length=<n>, unicode=true}])`,

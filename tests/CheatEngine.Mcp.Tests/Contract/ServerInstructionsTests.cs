@@ -41,10 +41,8 @@ public sealed partial class ServerInstructionsTests
 
 	[Theory]
 	[MemberData(nameof(Texts))]
-	public void Instructions_StateScopeConsentAndTheGuidedWorkflows(string host, string text)
+	public void Instructions_StateTheCallingRulesAndTheGuidedWorkflows(string host, string text)
 	{
-		Assert.Contains("single-player or offline software the user may modify", text, StringComparison.Ordinal);
-		Assert.Contains("consent", text, StringComparison.Ordinal);
 		Assert.Contains(McpResourceUris.Doc("workflows") + " first", text, StringComparison.Ordinal);
 		Assert.Contains("prompts", text, StringComparison.Ordinal);
 		Assert.Contains("Most lists page with offset and limit", text, StringComparison.Ordinal);

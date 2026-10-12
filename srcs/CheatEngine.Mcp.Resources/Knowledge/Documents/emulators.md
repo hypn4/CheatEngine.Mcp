@@ -6,9 +6,6 @@ tools read and write big-endian numbers directly, and named scans and byte-patte
 for one call. Read this page before you scan an emulated game; the [emulator_memory](../Workflows/emulator-memory.md)
 workflow follows the same steps.
 
-Use this only on games the user owns or may modify, played offline, never in netplay or any online mode. Explain each
-change and get consent before you write memory, change Cheat Engine's settings or run Lua ([safety](safety.md)).
-
 ## Guest byte order
 
 | Byte order | Consoles (emulator) |
@@ -93,7 +90,7 @@ then scan_next.
   It applies to int16 to uint64, float and double. A 1-byte value needs none. `pointer`, `string`, `wstring` and
   `bytes` refuse big_endian (invalid_argument, and a batch refuses the whole batch): read a guest pointer as bytes
   (Guest and host addresses).
-- Write, after consent:
+- Write:
   `memory_write(address="emuBase+3A1240", valueType="int32", value="999", byteOrder="big_endian", verify=true)` writes
   `00 00 03 E7`. memory_write.previous holds the raw bytes: undo with
   `memory_write(address="emuBase+3A1240", valueType="bytes", value="<previous>")`.

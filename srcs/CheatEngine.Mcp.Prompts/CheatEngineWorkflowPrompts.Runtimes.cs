@@ -12,8 +12,8 @@ public sealed partial class CheatEngineWorkflowPrompts
 {
 	/// <summary>Explore a Unity (Mono) game.</summary>
 	[McpServerPrompt(Name = "unity_mono_recon", Title = "Explore a Unity (Mono) game")]
-	[Description("Unity Mono classes, fields, statics and methods through CE's Mono data collector, after explicit "
-				 + "consent." + NeedsTargetCodeExecution)]
+	[Description("Unity Mono classes, fields, statics and methods through CE's Mono data collector."
+				 + NeedsTargetCodeExecution)]
 	public static GetPromptResult UnityMonoReconPrompt(
 		[Display(Name = "Class name")]
 		[Description("The class to find, such as PlayerController.")]
@@ -29,7 +29,7 @@ public sealed partial class CheatEngineWorkflowPrompts
 	/// <summary>Explore a Unity (IL2CPP) game.</summary>
 	[McpServerPrompt(Name = "unity_il2cpp_recon", Title = "Explore a Unity (IL2CPP) game")]
 	[Description("Unity IL2CPP classes and fields: offline from offsets the user supplies, or through CE's data "
-				 + "collector after explicit consent." + NeedsTargetCodeExecution)]
+				 + "collector." + NeedsTargetCodeExecution)]
 	public static GetPromptResult UnityIl2CppReconPrompt(
 		[Display(Name = "Mode")]
 		[Description("offline (default) reads memory only; collector injects CE's data collector into the game.")]

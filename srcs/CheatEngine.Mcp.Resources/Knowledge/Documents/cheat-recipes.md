@@ -4,10 +4,7 @@ Read this when the user names a goal (infinite health, money, no cooldown, telep
 section gives where the value usually lives, the workflows to run in order, how to verify, and the pitfalls.
 [plan_cheat](../Workflows/plan-cheat.md) turns one goal into a plan the user approves.
 
-Scope: single-player or offline software the user owns or may modify. Never online, co-op, ranked or leaderboard play,
-anti-cheat-protected titles, values kept on a server, or paid content behind a licence or purchase check
-([safety](safety.md)). Every recipe changes the target: have the user save the game and copy the save folder first,
-then explain each write, freeze, patch, debugger attach or speed change and get consent before it.
+Every recipe changes the target: have the user save the game and copy the save folder first.
 
 ## Start every recipe the same way
 
@@ -69,9 +66,9 @@ The filter goes above `code:` (the original bytes) in the scaffold from `asm_gen
 
 ```
 newmem:
-  cmp dword ptr [rbx+14],1   // your team?
-  jne code                   // no: original damage write
-  jmp return                 // yes: skip it
+  cmp dword ptr [rbx+14],1 // your team?
+  jne code // no: original damage write
+  jmp return // yes: skip it
 code:
   db <original bytes>
   jmp return
@@ -117,8 +114,7 @@ code:
 - **Stored as:** usually int32, sometimes int64; a double in GameMaker; a double or a tagged integer (2n, 2n+1) in
   JavaScript and RPG Maker games ([tagged numbers](value-types.md#tagged-and-engine-specific-numbers)); sometimes
   scaled (cents) or encoded ([when a scan finds nothing](troubleshooting-scans.md)).
-- **Run:** [find_known_value](../Workflows/find-known-value.md), earning or spending between scans, then one write with
-  consent, `memory_write(address="<address>", valueType="int32", value="50000")`; keep `memory_write.previous`, and
+- **Run:** [find_known_value](../Workflows/find-known-value.md), earning or spending between scans, then one write: `memory_write(address="<address>", valueType="int32", value="50000")`; keep `memory_write.previous`, and
   add a record to set it again.
 - **Free purchases:** [find_writer](../Workflows/find-writer.md) while buying, then
   [nop_patch](../Workflows/nop-patch.md) on the subtraction; every cost through that code becomes free.
@@ -150,7 +146,7 @@ code:
 - **Stored as:** usually three consecutive floats (doubles in Unreal Engine 5). Up is Y in Unity, Z in Unreal and
   Source: jump to find it.
 - **Run:** [find_position](../Workflows/find-position.md). Save with
-  `memory_read(address="<x>", valueType="float", count=3)` and keep `memory_read.values`. Load with consent:
+  `memory_read(address="<x>", valueType="float", count=3)` and keep `memory_read.values`. Load:
   `process_set_paused(paused=true)`, then
   `memory_write_batch(items=[{address="<x>", valueType="float", value="<x0>"}, {address="<x>+4", valueType="float", value="<y0>"}, {address="<x>+8", valueType="float", value="<z0>"}], verify=true)`,
   then `process_set_paused(paused=false)`. In UE5 use `double` at +8 and +16. MCP tracks its pause as a resource
@@ -230,7 +226,7 @@ code:
 
 ## Undo and clean up
 
-[cleanup_session](../Workflows/cleanup-session.md) has the full order. In short, with consent for each step:
+[cleanup_session](../Workflows/cleanup-session.md) has the full order. In short, for each step:
 
 1. `runtime_list_resources()` lists what MCP holds: patches, running jobs, MCP's pause and a speed other than 1.
 2. `runtime_stop_job(jobId="<jobId>")` for each job still running.
@@ -240,7 +236,7 @@ code:
 5. `process_set_paused(paused=false)`, then `speedhack_set_speed(speed=1)`: a speed change is refused while the game
    is paused. The speedhack hooks stay until the game exits.
 6. Records belong to Cheat Engine's address list, and `runtime_release_resources()` leaves them: delete them only
-   with consent, `record_delete(ids=[<id>])`.
+   `record_delete(ids=[<id>])`.
 7. `runtime_release_resources()` for whatever MCP still holds, then `debugger_detach()` if the user wants the debugger
    gone; it is refused (`busy`) while MCP still holds a resource.
 

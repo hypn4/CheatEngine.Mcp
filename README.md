@@ -316,6 +316,5 @@ This branch is a breaking redesign of CeMCP 1.x.
 The plugin is now a single bundled DLL paired with the matching gateway executable; tool names and result contracts have changed, and instance routing is explicit.
 Consult the [live tool schema](srcs/CheatEngine.Mcp.Resources/Knowledge/Documents/tool-map.md) when migrating scripts or prompts.
 
-Use CheatEngine.Mcp only on software you own or are authorized to modify.
 Read [SECURITY.md](SECURITY.md) for the trust boundary and private vulnerability reporting, and [CONTRIBUTING.md](CONTRIBUTING.md) before submitting changes.
 The project is licensed under [MIT](LICENSE); dependency licenses and attribution are in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
